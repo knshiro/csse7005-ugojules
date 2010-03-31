@@ -72,9 +72,9 @@ void PhoneBookDialog::updateScreen(Update_Types type)
 				return;
 			}
 			selection--;
-			if(selection < slotIndex.first()){
+			if((selection < slotIndex.first()+1)&&(selection>-1)){
 				slotIndex.pop_back();
-				slotIndex.push_front(selection);
+				slotIndex.push_front(selection-1);
 			}
 			break;
 		case DOWN:
@@ -82,9 +82,9 @@ void PhoneBookDialog::updateScreen(Update_Types type)
 				return;
 			}
 			selection++;
-			if(selection > slotIndex.last()){
+			if((selection>slotIndex.last()-1)&&(selection<myPhoneBook->getNumEntries()-1)){
 				slotIndex.pop_front();
-				slotIndex.push_back(selection);
+				slotIndex.push_back(selection+1);
 			}
 			break;
 		case DELETE_LAST:
@@ -148,12 +148,15 @@ void PhoneBookDialog::on_selectButton_clicked()
     // if new contact is the selection open dialog to add contacts
     // otherwise open dialog to view contact information
     // the example below will open the dialog at full screen
-
-    AddContactDialog *myAddContactDialog = new AddContactDialog();
-    myAddContactDialog->setAttribute(Qt::WA_DeleteOnClose);
-    myAddContactDialog->showMaximized();
-    if(selection >-1){
-    myAddContactDialog->setupEdit(myPhoneBook->getElementAt(selection));
+    if(selection==-1){
+        AddContactDialog *myAddContactDialog = new AddContactDialog();
+        myAddContactDialog->setAttribute(Qt::WA_DeleteOnClose);
+        myAddContactDialog->showMaximized();
+    }
+    else {
+        ViewContactDialog *vcd = new ViewContactDialog(myPhoneBook->getElementAt(selection));
+        vcd->setAttribute(Qt::WA_DeleteOnClose);
+        vcd->showMaximized();
     }
 }
 
