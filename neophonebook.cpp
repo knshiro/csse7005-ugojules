@@ -24,7 +24,7 @@ NeoPhoneBook::NeoPhoneBook()
     //fileName = "/home/user/projects/Assignment_2/Documents/phonebook";
 
     // Use this path for KINGSTON
-    fileName = "/media/KINGSTON/csse7005/project/Assignment_2/Documents/phonebook";
+    fileName = "/media/KINGSTON/csse7005/project/csse7005-ugojules/Documents/phonebook";
     
     // Use this path for NEO 
     //fileName = "/home/root/Documents/phonebook";
@@ -76,8 +76,9 @@ void NeoPhoneBook::loadPhoneBook()
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
        return;
     while (!file.atEnd()) {
-        QString *line = new QString(file.readLine());
-        QStringList fields = line->split("|");
+        QString line = QString(file.readLine());
+        line = line.replace("\n","");
+        QStringList fields = line.split("|");
         addEntry(new NeoPhoneBookEntry(fields.at(0),fields.at(1),fields.at(2),fields.at(3)));
     }
     

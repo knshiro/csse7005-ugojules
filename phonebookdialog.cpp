@@ -152,6 +152,9 @@ void PhoneBookDialog::on_selectButton_clicked()
     AddContactDialog *myAddContactDialog = new AddContactDialog();
     myAddContactDialog->setAttribute(Qt::WA_DeleteOnClose);
     myAddContactDialog->showMaximized();
+    if(selection >-1){
+    myAddContactDialog->setupEdit(myPhoneBook->getElementAt(selection));
+    }
 }
 
 void PhoneBookDialog::on_deleteButton_clicked()

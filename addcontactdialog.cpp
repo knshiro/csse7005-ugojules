@@ -16,11 +16,14 @@
 ****************************************************************************/
 
 #include "addcontactdialog.h"
-
+#include <QImageDocumentSelectorDialog>
 AddContactDialog::AddContactDialog(QWidget *parent, Qt::WFlags f)
     : QWidget(parent, f)
 {
     // initialize the dialog
+    setupUi(this);
+    editEntry = NULL;
+
 }
 
 AddContactDialog::~AddContactDialog()
@@ -30,6 +33,53 @@ AddContactDialog::~AddContactDialog()
 
 void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
 {
+    QPixmap picture;
     // sets up the UI for edit-mode
+    nameLineEdit->setText(entryToEdit->getContactName());
+    numberLineEdit->setText(entryToEdit->getPhoneNumber());
+    emailLineEdit->setText(entryToEdit->getContactEmail());
+    qDebug() << "Filename :" << entryToEdit->getPictureFilePath();
+    if(entryToEdit->getPictureFilePath() != ""){
+      picture = QPixmap(entryToEdit->getPictureFilePath());
+      picture = picture.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
+      pictureLabel->setPixmap(picture);
+    }
+}
+
+
+void AddContactDialog::on_savePushButton_clicked()
+{
+//       if(editEntry != NULL){
+//         emit editContact(editEntry);
+//       }
+//       else {
+//         NeoPhoneBookEntry *newEntry = new NeoPhoneBookEntry(nameLineEdit, numberLineEdit, emailLineEdit, pictureFilePath);
+//         emit saveContact(newEntry);
+//       }
+}
+
+
+void AddContactDialog::on_cancelPushButton_clicked()
+{
+
+}
+
+
+void AddContactDialog::on_browsePushButton_clicked()
+{
+    QImageDocumentSelectorDialog dialog( this );
+    QPixmap picture;
+
+
+    if( QtopiaApplication::execDialog( &dialog ) ) {
+        // Accept
+        QContent content = dialog.selectedDocument();
+        pictureFilePath = content.fileName ();
+	picture = QPixmap(pictureFilePath);
+        picture = picture.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
+        pictureLabel->setPixmap(picture);
+    } else {
+        // Reject
+    }
 }
 
