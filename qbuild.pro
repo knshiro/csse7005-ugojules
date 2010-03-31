@@ -15,14 +15,17 @@ CONFIG+=qtopia
 #CONFIG+=singleexec
 
 # These are the source files that get built to create the application
-FORMS  =addcontactform.ui \
-        phonebookform.ui 
+FORMS  =viewcontactform.ui \
+	addcontactform.ui \
+        phonebookform.ui
 HEADERS=neophonebookentry.h \
         neophonebook.h \
+	viewcontactdialog.h \
         addcontactdialog.h \
         phonebookdialog.h
 SOURCES=neophonebookentry.cpp \ 
         neophonebook.cpp \
+	viewcontactdialog.cpp \
         addcontactdialog.cpp \
         phonebookdialog.cpp \
         main.cpp
