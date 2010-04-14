@@ -43,7 +43,7 @@ void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
     qDebug() << "Filename :" << entryToEdit->getPictureFilePath();
     if(entryToEdit->getPictureFilePath() != ""){
       picture = QPixmap(entryToEdit->getPictureFilePath());
-      //picture = picture.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
+      picture = picture.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
       pictureLabel->setPixmap(picture);
     }
 }
