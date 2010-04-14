@@ -28,7 +28,7 @@ class NeoPhoneBook : public QObject
     public:	
         NeoPhoneBook();
         int getNumEntries();
-        int findIndex(NeoPhoneBookEntry *newEntry);
+        int findIndex(QString const &name);
         void addEntry(NeoPhoneBookEntry *newEntry);
         void replaceEntry(int index, NeoPhoneBookEntry *newEntry);
         void deleteEntry(int index);
@@ -41,7 +41,7 @@ class NeoPhoneBook : public QObject
     private:
         QList<NeoPhoneBookEntry*> phoneList;
         QString fileName;
-	int recFindIndex(NeoPhoneBookEntry *newEntry,int start, int end);
+	int recFindIndex(QString const &name,int start, int end);
 };
 
 #endif

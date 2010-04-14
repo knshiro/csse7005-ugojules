@@ -37,7 +37,7 @@ void NeoPhoneBook::addEntry(NeoPhoneBookEntry *newEntry)
 {
     qDebug() << ">>>> Adding entry";
     // add the entry to the phonebook using findIndex and save
-    int i = findIndex(newEntry);
+    int i = findIndex(newEntry->getContactName());
     qDebug() << "Index of the entry :" << i;
     phoneList.insert(i,newEntry);
     savePhoneBook();
@@ -45,32 +45,32 @@ void NeoPhoneBook::addEntry(NeoPhoneBookEntry *newEntry)
     
 }
 
-int NeoPhoneBook::findIndex(NeoPhoneBookEntry *entry)
+int NeoPhoneBook::findIndex(QString const &name)
 {
     // find the best index to insert into the list using binary search
-    if(phoneList.size()==0){return 0;}
-    if(QString::compare(entry->getContactName(),phoneList.at(0)->getContactName(),Qt::CaseInsensitive)<0){
-      return 0;}
-    if(entry->getContactName().compare(phoneList.at(phoneList.size()-1)->getContactName(),Qt::CaseInsensitive)>0){
-          return phoneList.size();}
-
-    return recFindIndex(entry,0,phoneList.size()-1);
+     if(phoneList.size()==0){return 0;}
+     if(QString::compare(name,phoneList.at(0)->getContactName(),Qt::CaseInsensitive)<0){
+       return 0;}
+     if(name.compare(phoneList.at(phoneList.size()-1)->getContactName(),Qt::CaseInsensitive)>0){
+           return phoneList.size();}
+ 
+     return recFindIndex(name,0,phoneList.size()-1);
 }
 
-int NeoPhoneBook::recFindIndex(NeoPhoneBookEntry *newEntry,int start, int end)
+int NeoPhoneBook::recFindIndex(QString const &name,int start, int end)
 {
    
     if(end==start+1) return end;
     int mid = (start+end)/2;
     QString midS = phoneList.at(mid)->getContactName();
-    if(newEntry->getContactName().compare(midS,Qt::CaseInsensitive)==0){
+    if(name.compare(midS,Qt::CaseInsensitive)==0){
       return mid;
     }
-    if(newEntry->getContactName().compare(midS,Qt::CaseInsensitive)<0){
-      return recFindIndex(newEntry,start,mid);
+    if(name.compare(midS,Qt::CaseInsensitive)<0){
+      return recFindIndex(name,start,mid);
     }
     else {
-      return recFindIndex(newEntry,mid,end);
+      return recFindIndex(name,mid,end);
     }
 
 }
@@ -88,7 +88,7 @@ void NeoPhoneBook::loadPhoneBook()
         line = line.replace("\n","");
         QStringList fields = line.split("|");
 	NeoPhoneBookEntry * newEntry = new NeoPhoneBookEntry(fields.at(0),fields.at(1),fields.at(2),fields.at(3));
-	int i = findIndex(newEntry);
+	int i = findIndex(newEntry->getContactName());
     	phoneList.insert(i,newEntry);
     }
     

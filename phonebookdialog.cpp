@@ -94,11 +94,32 @@ void PhoneBookDialog::updateScreen(Update_Types type)
 				slotIndex.push_front(selection-4);
 			break;
 		case REFRESH:
+			slotIndex.clear();
+			if (selection <= -1){
+				selection = -1;
+				for (int i = -1; i< myPhoneBook->getNumEntries()-1;i++){
+					slotIndex << i;
+				}
+			} else
+			if (selection >= myPhoneBook->getNumEntries()-1){
+				selection = myPhoneBook->getNumEntries()-1;
+				for(int i = myPhoneBook->getNumEntries()-1; i>=-1;i--){
+					slotIndex.prepend(i);
+				}
+			} else {
+				slotIndex << selection -1;
+				slotIndex << selection;
+				for(int i= selection +1; i < std::min(selection + 4,myPhoneBook->getNumEntries());i++) {
+					slotIndex << i;
+				}
+			}
+			break;
 		default:
 			;
 	}
 	qDebug()<<"pouet caca"<<selection;
 	for(int i=0;i<5;i++){
+		qDebug()<<"Slot index"<< i << ":" << slotIndex.at(i);
 		if(slotIndex.at(i) == -1){
 			updateContactSlot(i,"New contact",(slotIndex.at(i)==selection));
 		} else {
@@ -135,8 +156,12 @@ void PhoneBookDialog::deleteContact(int index)
 
 void PhoneBookDialog::on_searchLineEdit_textChanged(const QString &text)
 {
+    qDebug() << ">>Text changed";
     // updates the screen so that the selected entry zeroes into closest match
-    
+    int i = myPhoneBook->findIndex(text);
+    qDebug() << "Index found =" << i;
+    selection = i;
+    updateScreen(REFRESH);
 }
 
 void PhoneBookDialog::on_upButton_clicked()
