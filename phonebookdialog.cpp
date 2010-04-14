@@ -113,11 +113,16 @@ void PhoneBookDialog::updateScreen(Update_Types type)
 void PhoneBookDialog::addContact(NeoPhoneBookEntry *newEntry)
 {
     // add contact to the phonebook and refresh screen
+	myPhoneBook->addEntry(newEntry);
+	updateScreen(REFRESH);
+
 }
 
 void PhoneBookDialog::replaceContact(NeoPhoneBookEntry *newEntry)
 {
     // replace contact in the phonebook and refresh screen
+	myPhoneBook->savePhoneBook();
+	updateScreen(REFRESH);
 }
 
 void PhoneBookDialog::deleteContact(int index)
@@ -131,6 +136,7 @@ void PhoneBookDialog::deleteContact(int index)
 void PhoneBookDialog::on_searchLineEdit_textChanged(const QString &text)
 {
     // updates the screen so that the selected entry zeroes into closest match
+    
 }
 
 void PhoneBookDialog::on_upButton_clicked()
@@ -152,6 +158,8 @@ void PhoneBookDialog::on_selectButton_clicked()
         AddContactDialog *myAddContactDialog = new AddContactDialog();
         myAddContactDialog->setAttribute(Qt::WA_DeleteOnClose);
         myAddContactDialog->showMaximized();
+	QObject::connect( myAddContactDialog, SIGNAL(addContact(NeoPhoneBookEntry *)), this, SLOT(addContact(NeoPhoneBookEntry *) ));
+	QObject::connect( myAddContactDialog, SIGNAL(editContact(NeoPhoneBookEntry *)), this, SLOT(replaceContact(NeoPhoneBookEntry *) ));
     }
     else {
         ViewContactDialog *vcd = new ViewContactDialog(myPhoneBook->getElementAt(selection));

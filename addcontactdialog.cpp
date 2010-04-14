@@ -34,6 +34,7 @@ AddContactDialog::~AddContactDialog()
 void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
 {
     QPixmap picture;
+    editEntry = entryToEdit;
     // sets up the UI for edit-mode
     nameLineEdit->setText(entryToEdit->getContactName());
     numberLineEdit->setText(entryToEdit->getPhoneNumber());
@@ -41,7 +42,7 @@ void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
     qDebug() << "Filename :" << entryToEdit->getPictureFilePath();
     if(entryToEdit->getPictureFilePath() != ""){
       picture = QPixmap(entryToEdit->getPictureFilePath());
-      picture = picture.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
+      //picture = picture.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
       pictureLabel->setPixmap(picture);
     }
 }
@@ -49,19 +50,24 @@ void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
 
 void AddContactDialog::on_savePushButton_clicked()
 {
-//       if(editEntry != NULL){
-//         emit editContact(editEntry);
-//       }
-//       else {
-//         NeoPhoneBookEntry *newEntry = new NeoPhoneBookEntry(nameLineEdit, numberLineEdit, emailLineEdit, pictureFilePath);
-//         emit saveContact(newEntry);
-//       }
+       if(editEntry != NULL){
+	 editEntry-> setContactName(nameLineEdit->text());
+         editEntry-> setPhoneNumber(numberLineEdit->text());
+         editEntry-> setContactEmail(emailLineEdit->text());
+         editEntry-> setPictureFilePath(pictureFilePath);
+         emit editContact(editEntry);
+       }
+       else {
+	NeoPhoneBookEntry *newEntry = new NeoPhoneBookEntry(nameLineEdit->text(), numberLineEdit->text(), emailLineEdit->text(),pictureFilePath);
+         emit addContact(newEntry);
+       }
+	close();
 }
 
 
 void AddContactDialog::on_cancelPushButton_clicked()
 {
-
+	close();
 }
 
 
@@ -76,7 +82,8 @@ void AddContactDialog::on_browsePushButton_clicked()
         QContent content = dialog.selectedDocument();
         pictureFilePath = content.fileName ();
 	picture = QPixmap(pictureFilePath);
-        picture = picture.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
+	qDebug() << "Filename :" << pictureFilePath;
+       // picture = picture.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
         pictureLabel->setPixmap(picture);
     } else {
         // Reject

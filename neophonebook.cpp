@@ -35,18 +35,23 @@ NeoPhoneBook::NeoPhoneBook()
 
 void NeoPhoneBook::addEntry(NeoPhoneBookEntry *newEntry)
 {
+    qDebug() << ">>>> Adding entry";
     // add the entry to the phonebook using findIndex and save
     int i = findIndex(newEntry);
+    qDebug() << "Index of the entry :" << i;
     phoneList.insert(i,newEntry);
+    savePhoneBook();
+    qDebug() << "<<<< Entry added";
+    
 }
 
 int NeoPhoneBook::findIndex(NeoPhoneBookEntry *entry)
 {
     // find the best index to insert into the list using binary search
     if(phoneList.size()==0){return 0;}
-    if(QString::compare(entry->getContactName(),phoneList.at(0)->getContactName())<0){
+    if(QString::compare(entry->getContactName(),phoneList.at(0)->getContactName(),Qt::CaseInsensitive)<0){
       return 0;}
-    if(entry->getContactName().compare(phoneList.at(phoneList.size()-1)->getContactName())>0){
+    if(entry->getContactName().compare(phoneList.at(phoneList.size()-1)->getContactName(),Qt::CaseInsensitive)>0){
           return phoneList.size();}
 
     return recFindIndex(entry,0,phoneList.size()-1);
@@ -58,10 +63,10 @@ int NeoPhoneBook::recFindIndex(NeoPhoneBookEntry *newEntry,int start, int end)
     if(end==start+1) return end;
     int mid = (start+end)/2;
     QString midS = phoneList.at(mid)->getContactName();
-    if(newEntry->getContactName().compare(midS)==0){
+    if(newEntry->getContactName().compare(midS,Qt::CaseInsensitive)==0){
       return mid;
     }
-    if(newEntry->getContactName().compare(midS)<0){
+    if(newEntry->getContactName().compare(midS,Qt::CaseInsensitive)<0){
       return recFindIndex(newEntry,start,mid);
     }
     else {
@@ -82,13 +87,16 @@ void NeoPhoneBook::loadPhoneBook()
         QString line = QString(file.readLine());
         line = line.replace("\n","");
         QStringList fields = line.split("|");
-        addEntry(new NeoPhoneBookEntry(fields.at(0),fields.at(1),fields.at(2),fields.at(3)));
+	NeoPhoneBookEntry * newEntry = new NeoPhoneBookEntry(fields.at(0),fields.at(1),fields.at(2),fields.at(3));
+	int i = findIndex(newEntry);
+    	phoneList.insert(i,newEntry);
     }
     
 }
 
 void NeoPhoneBook::savePhoneBook()
 {
+    qDebug()<<">>>>Saving phonebook";
     // save the phonebook by writing phoneList to the "phonebook" file
     QFile file(fileName);
     NeoPhoneBookEntry entry;
@@ -97,9 +105,11 @@ void NeoPhoneBook::savePhoneBook()
     for(int i=0;i<phoneList.size();i++){
       entry = *phoneList.at(i);
       QString line = entry.getContactName() + "|" + entry.getPhoneNumber() + "|" + entry.getContactEmail() + "|" + entry.getPictureFilePath()+"\n";
+      qDebug()<<"Saving entry" <<line;
       QByteArray bytes = line.toAscii();
       file.write(bytes);
     }
+    qDebug()<<"<<<<Phonebook saved";
 }
 
 void NeoPhoneBook::clearPhoneBook()
@@ -112,12 +122,14 @@ void NeoPhoneBook::replaceEntry(int index, NeoPhoneBookEntry *newEntry)
 {
     // replace an entry in the phoneList at index with newEntry
     phoneList.replace(index,newEntry);
+    savePhoneBook();
 }
 
 void NeoPhoneBook::deleteEntry(int index)
 {
     // remove an entry in the phoneList at index
     phoneList.removeAt(index);
+    savePhoneBook();
 }
 
 int NeoPhoneBook::getNumEntries()
