@@ -49,7 +49,7 @@ int NeoPhoneBook::findIndex(QString const &name)
 {
     // find the best index to insert into the list using binary search
      if(phoneList.size()==0){return 0;}
-     if(QString::compare(name,phoneList.at(0)->getContactName(),Qt::CaseInsensitive)<0){
+     if(QString::compare(name,phoneList.at(0)->getContactName(),Qt::CaseInsensitive)<=0){
        return 0;}
      if(name.compare(phoneList.at(phoneList.size()-1)->getContactName(),Qt::CaseInsensitive)>0){
            return phoneList.size();}

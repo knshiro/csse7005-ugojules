@@ -63,7 +63,8 @@ void PhoneBookDialog::updateContactSlot(int index, QString name, bool selected)
 
 void PhoneBookDialog::updateScreen(Update_Types type)
 {
-	qDebug()<<"caca pouet"<<selection;
+	qDebug()<< "<<<<Update Screen";
+	qDebug()<<"Selection :"<<selection;
 	if(selection<-1) selection = -1;
 	if(selection>myPhoneBook->getNumEntries()-1) selection = myPhoneBook->getNumEntries()-1;
     // updates the 5 contact slots for scrolling or refreshing
@@ -98,7 +99,12 @@ void PhoneBookDialog::updateScreen(Update_Types type)
 			slotIndex.clear();
 			if (selection <= -1){
 				selection = -1;
-				for (int i = -1; i< myPhoneBook->getNumEntries()-1;i++){
+				for (int i = -1; i< std::min(myPhoneBook->getNumEntries()-1,5);i++){
+					slotIndex << i;
+				}
+			} else 
+			if(selection < 4){
+				for (int i = -1; i< std::min(myPhoneBook->getNumEntries()-1,5);i++){
 					slotIndex << i;
 				}
 			} else
@@ -146,6 +152,7 @@ void PhoneBookDialog::addContact(NeoPhoneBookEntry *newEntry)
 {
     // add contact to the phonebook and refresh screen
 	myPhoneBook->addEntry(newEntry);
+	selection = myPhoneBook->findIndex(newEntry->getContactName());
 	updateScreen(REFRESH);
 
 }
@@ -153,7 +160,10 @@ void PhoneBookDialog::addContact(NeoPhoneBookEntry *newEntry)
 void PhoneBookDialog::replaceContact(NeoPhoneBookEntry *newEntry)
 {
     // replace contact in the phonebook and refresh screen
+	myPhoneBook->deleteEntry(selection);
+	myPhoneBook->addEntry(newEntry);
 	myPhoneBook->savePhoneBook();
+	selection= myPhoneBook->findIndex(newEntry->getContactName());
 	updateScreen(REFRESH);
 }
 

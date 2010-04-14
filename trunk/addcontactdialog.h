@@ -37,6 +37,7 @@ class AddContactDialog : public QWidget, public Ui_AddContactDialog
         QString pictureFilePath;
 	NeoPhoneBookEntry *editEntry;
 
+
     private slots:
 	void on_savePushButton_clicked();
 	void on_cancelPushButton_clicked();
