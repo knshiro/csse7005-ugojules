@@ -45,6 +45,7 @@ void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
       picture = QPixmap(entryToEdit->getPictureFilePath());
       picture = picture.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
       pictureLabel->setPixmap(picture);
+      removePushButton->setEnabled(true);
     }
 }
 
@@ -72,7 +73,13 @@ void AddContactDialog::on_cancelPushButton_clicked()
 {
 	close();
 }
+void AddContactDialog::on_removePushButton_clicked()
+{
+	pictureFilePath = "";
+	pictureLabel->setText("No Picture");
+	removePushButton->setEnabled(false);
 
+}
 
 void AddContactDialog::on_browsePushButton_clicked()
 {
@@ -86,8 +93,9 @@ void AddContactDialog::on_browsePushButton_clicked()
         pictureFilePath = content.fileName ();
 	picture = QPixmap(pictureFilePath);
 	qDebug() << "Filename :" << pictureFilePath;
-       // picture = picture.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
+        picture = picture.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
         pictureLabel->setPixmap(picture);
+		removePushButton->setEnabled(true);
     } else {
         // Reject
     }

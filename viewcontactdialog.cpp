@@ -22,15 +22,20 @@
 ViewContactDialog::ViewContactDialog(PhoneBookDialog *phoneBookDialog, int indexEntry, QWidget *parent, Qt::WFlags f)
     : QWidget(parent, f)
 {
+	qDebug() << ">>>> View Contact Dialog :";
 	this->phoneBookDialog=phoneBookDialog;
 	this->indexEntry=indexEntry;
 	setupUi(this);
 	NeoPhoneBookEntry * entry = phoneBookDialog->myPhoneBook->getElementAt(indexEntry);
 	nameLabel->setText(entry->getContactName());
 	numberLabel->setText(entry->getPhoneNumber());
-	QPixmap * pic = new QPixmap();
-	pic->load(entry->getPictureFilePath());
-	pictureLabel->setPixmap(*pic);
+	QPixmap pic ;
+	pic.load(entry->getPictureFilePath());
+	qDebug() << "Picture size :" << pic.size();
+	qDebug() << "Label width :" << pictureLabel->width();
+	pic = pic.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
+	qDebug() << "Picture scaled size :" << pic.size();
+	pictureLabel->setPixmap(pic);
 
 }
 
@@ -50,8 +55,18 @@ void ViewContactDialog::on_editButton_clicked(){
 }
 
 void ViewContactDialog::on_deleteButton_clicked(){
-	emit deleteContact(indexEntry);
-	close();
+	// prompt user to be able to delete the selected contact
+	if(indexEntry==-1) return;
+	qDebug() << "deleting ?: " << QString::number(indexEntry);
+
+	int ret = QMessageBox::warning(this, "Confirm delete",
+                   "Erase contact " + phoneBookDialog->myPhoneBook->getElementAt(indexEntry)->getContactName() +" ?",
+                   QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+	if (ret==QMessageBox::Yes) {
+		emit deleteContact(indexEntry);
+		close();
+	}	
+	
 }
 
 void ViewContactDialog::on_callButton_clicked(){

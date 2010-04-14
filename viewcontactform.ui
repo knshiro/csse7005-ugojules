@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>274</width>
-    <height>315</height>
+    <width>481</width>
+    <height>439</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -18,89 +18,126 @@
   <property name="windowTitle" >
    <string>View Contact</string>
   </property>
-  <layout class="QGridLayout" >
-   <item row="0" column="0" colspan="2" >
-    <widget class="QLabel" name="nameLabel" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Maximum" hsizetype="Expanding" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text" >
-      <string>Contact Name</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="2" >
-    <widget class="QLabel" name="numberLabel" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Maximum" hsizetype="Expanding" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text" >
-      <string>+61404040404</string>
-     </property>
-    </widget>
-   </item>
-   <item rowspan="2" row="2" column="0" >
-    <widget class="QLabel" name="pictureLabel" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text" >
-      <string>No picture</string>
-     </property>
-     <property name="alignment" >
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1" >
-    <widget class="QPushButton" name="editButton" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Minimum" hsizetype="Preferred" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text" >
-      <string>Edit</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1" >
-    <widget class="QPushButton" name="deleteButton" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Maximum" hsizetype="Preferred" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text" >
-      <string>Delete</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0" colspan="2" >
-    <widget class="QPushButton" name="callButton" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text" >
-      <string>Call</string>
-     </property>
-    </widget>
-   </item>
-  </layout>
+  <widget class="QLabel" name="nameLabel" >
+   <property name="geometry" >
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>449</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Maximum" hsizetype="Expanding" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="text" >
+    <string>Contact Name</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="numberLabel" >
+   <property name="geometry" >
+    <rect>
+     <x>20</x>
+     <y>50</y>
+     <width>449</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Maximum" hsizetype="Expanding" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="text" >
+    <string>+61404040404</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="pictureLabel" >
+   <property name="geometry" >
+    <rect>
+     <x>23</x>
+     <y>91</y>
+     <width>241</width>
+     <height>241</height>
+    </rect>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="text" >
+    <string>No picture</string>
+   </property>
+   <property name="scaledContents" >
+    <bool>false</bool>
+   </property>
+   <property name="alignment" >
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="editButton" >
+   <property name="geometry" >
+    <rect>
+     <x>290</x>
+     <y>160</y>
+     <width>181</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="text" >
+    <string>Edit</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="deleteButton" >
+   <property name="geometry" >
+    <rect>
+     <x>290</x>
+     <y>266</y>
+     <width>181</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="text" >
+    <string>Delete</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="callButton" >
+   <property name="geometry" >
+    <rect>
+     <x>20</x>
+     <y>360</y>
+     <width>447</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="text" >
+    <string>Call</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
