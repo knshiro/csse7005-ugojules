@@ -42,6 +42,7 @@ class AddContactDialog : public QWidget, public Ui_AddContactDialog
 	void on_savePushButton_clicked();
 	void on_cancelPushButton_clicked();
 	void on_browsePushButton_clicked();
+	void on_removePushButton_clicked();
 
     signals:
       void editContact(NeoPhoneBookEntry *editEntry);
