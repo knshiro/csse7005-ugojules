@@ -84,7 +84,11 @@ void PhoneBookDialog::updateScreen(Update_Types type)
 				return;
 			}
 			selection++;
-			if((selection>slotIndex.last()-1)&&(selection<myPhoneBook->getNumEntries()-1)){
+			qDebug()<<"s:"<<selection<<" n:"<<myPhoneBook->getNumEntries();
+			if(selection == myPhoneBook->getNumEntries()-1) break;
+			qDebug()<<"sis:"<<slotIndex.size()<<" sil:"<<slotIndex.last();
+			if((selection==slotIndex.last())){
+				qDebug()<<"scroll down";
 				slotIndex.pop_front();
 				slotIndex.push_back(selection+1);
 			}
@@ -96,33 +100,23 @@ void PhoneBookDialog::updateScreen(Update_Types type)
 				slotIndex.push_front(selection-4);
 			break;
 		case REFRESH:
+			qDebug()<<"refresh";
 			slotIndex.clear();
-			if (selection <= -1){
-				selection = -1;
-				for (int i = -1; i< std::min(myPhoneBook->getNumEntries()-1,5);i++){
+			if (selection == -1){
+				qDebug()<<"selection is on new contact";
+				for (int i = -1; i< std::min(myPhoneBook->getNumEntries(),4);i++){
 					slotIndex << i;
 				}
-			} else 
-			if(selection < 4){
-				for (int i = -1; i< std::min(myPhoneBook->getNumEntries()-1,5);i++){
-					slotIndex << i;
-				}
-			} else
-			if (selection >= myPhoneBook->getNumEntries()-1){
-				qDebug()<< "Last entry found";
-				selection = myPhoneBook->getNumEntries()-1;
-				for(int i = myPhoneBook->getNumEntries()-1; i>=myPhoneBook->getNumEntries()-5;i--){
-					slotIndex.prepend(i);
-				}
-			}
-			else if (selection >= myPhoneBook->getNumEntries()-5) {
-				for(int i = myPhoneBook->getNumEntries()-1; i>=myPhoneBook->getNumEntries()-5;i--){
-					slotIndex.prepend(i);
+			} else if (selection >= myPhoneBook->getNumEntries()-3) {
+				qDebug()<<"selection is at end of phonebook";
+				for(int i = 0; i<=std::min(4,myPhoneBook->getNumEntries());i++){
+					slotIndex.prepend(myPhoneBook->getNumEntries()-1-i);
 				}
 			} else {
+				qDebug()<<"selection is in the middle of phonebook";
 				slotIndex << selection -1;
 				slotIndex << selection;
-				for(int i= selection +1; i < std::min(selection + 4,myPhoneBook->getNumEntries());i++) {
+				for(int i=selection+1; i < std::min(selection+4,myPhoneBook->getNumEntries());i++) {
 					slotIndex << i;
 				}
 			}
@@ -130,17 +124,14 @@ void PhoneBookDialog::updateScreen(Update_Types type)
 		default:
 			;
 	}
-	qDebug()<<"pouet caca"<<selection;
+	qDebug()<<"selection after switch: "<<selection;
 	int i;
-	for(i=0;i<std::min(5,slotIndex.size());i++){
+	for(i=0;i<slotIndex.size();i++){
 		qDebug()<<"Slot index"<< i << ":" << slotIndex.at(i);
 		if(slotIndex.at(i) == -1){
 			updateContactSlot(i,"New contact",(slotIndex.at(i)==selection));
 		} else {
-		if(slotIndex.at(i)<myPhoneBook->getNumEntries())
 			updateContactSlot(i,myPhoneBook->getElementAt(slotIndex.at(i))->getContactName(),(slotIndex.at(i)==selection));
-		else
-			updateContactSlot(i,"");
 		}
 	}
 	for(int j=i;j<5;j++){
