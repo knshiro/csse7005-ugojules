@@ -23,7 +23,7 @@ NeoPhoneBook::NeoPhoneBook()
     // Use this path for QVFB
     //fileName = "/home/user/projects/Assignment_2/Documents/phonebook";
 
-    fileName = "./Documents/phonebook";
+    fileName = "/home/user/csse7005-ugojules/Documents/phonebook";
 
     // Use this path for KINGSTON
     //fileName = "/media/KINGSTON/csse7005/project/Assignment_2/Documents/phonebook";
@@ -85,7 +85,7 @@ void NeoPhoneBook::loadPhoneBook()
        return;
     while (!file.atEnd()) {
         QString line = QString(file.readLine());
-        line = line.replace("\n","");
+        line = line.replace("\n","").replace("\r","");
         QStringList fields = line.split("|");
 	NeoPhoneBookEntry * newEntry = new NeoPhoneBookEntry(fields.at(0),fields.at(1),fields.at(2),fields.at(3));
 	int i = findIndex(newEntry->getContactName());

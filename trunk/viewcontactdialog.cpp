@@ -16,13 +16,21 @@
 ****************************************************************************/
 
 #include "viewcontactdialog.h"
+#include "phonebookdialog.h"
 
-ViewContactDialog::ViewContactDialog(NeoPhoneBookEntry* entry, QWidget *parent, Qt::WFlags f)
+
+ViewContactDialog::ViewContactDialog(PhoneBookDialog *phoneBookDialog, int indexEntry, QWidget *parent, Qt::WFlags f)
     : QWidget(parent, f)
 {
+	this->phoneBookDialog=phoneBookDialog;
+	this->indexEntry=indexEntry;
 	setupUi(this);
+	NeoPhoneBookEntry * entry = phoneBookDialog->myPhoneBook->getElementAt(indexEntry);
 	nameLabel->setText(entry->getContactName());
 	numberLabel->setText(entry->getPhoneNumber());
+	QPixmap * pic = new QPixmap();
+	pic->load(entry->getPictureFilePath());
+	pictureLabel->setPixmap(*pic);
 
 }
 
@@ -32,14 +40,18 @@ ViewContactDialog::~ViewContactDialog()
 }
 
 void ViewContactDialog::on_editButton_clicked(){
-	/*AddContactDialog *myAddContactDialog = new AddContactDialog();
-	myAddContactDialog->setupEdit
+	AddContactDialog *myAddContactDialog = new AddContactDialog();
         myAddContactDialog->setAttribute(Qt::WA_DeleteOnClose);
-        myAddContactDialog->showMaximized();*/
+	myAddContactDialog->setupEdit(phoneBookDialog->myPhoneBook->getElementAt(indexEntry));
+        myAddContactDialog->showMaximized();
+	QObject::connect( myAddContactDialog, SIGNAL(addContact(NeoPhoneBookEntry *)), phoneBookDialog, SLOT(addContact(NeoPhoneBookEntry *) ));
+	QObject::connect( myAddContactDialog, SIGNAL(editContact(NeoPhoneBookEntry *)), phoneBookDialog, SLOT(replaceContact(NeoPhoneBookEntry *) ));
+	close();
 }
 
 void ViewContactDialog::on_deleteButton_clicked(){
-
+	emit deleteContact(indexEntry);
+	close();
 }
 
 void ViewContactDialog::on_callButton_clicked(){

@@ -39,6 +39,7 @@ void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
     nameLineEdit->setText(entryToEdit->getContactName());
     numberLineEdit->setText(entryToEdit->getPhoneNumber());
     emailLineEdit->setText(entryToEdit->getContactEmail());
+    pictureFilePath = entryToEdit->getPictureFilePath();
     qDebug() << "Filename :" << entryToEdit->getPictureFilePath();
     if(entryToEdit->getPictureFilePath() != ""){
       picture = QPixmap(entryToEdit->getPictureFilePath());
@@ -50,10 +51,12 @@ void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
 
 void AddContactDialog::on_savePushButton_clicked()
 {
+       qDebug() << ">>>> Save Clicked";
        if(editEntry != NULL){
 	 editEntry-> setContactName(nameLineEdit->text());
          editEntry-> setPhoneNumber(numberLineEdit->text());
          editEntry-> setContactEmail(emailLineEdit->text());
+	 qDebug() << "Picture path:" << pictureFilePath;
          editEntry-> setPictureFilePath(pictureFilePath);
          emit editContact(editEntry);
        }

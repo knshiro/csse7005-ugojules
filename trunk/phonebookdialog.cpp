@@ -17,6 +17,7 @@
 ****************************************************************************/
 
 #include "phonebookdialog.h"
+#include "viewcontactdialog.h"
 
 PhoneBookDialog::PhoneBookDialog(QWidget *parent, Qt::WFlags f)
     : QWidget(parent, f)
@@ -102,8 +103,14 @@ void PhoneBookDialog::updateScreen(Update_Types type)
 				}
 			} else
 			if (selection >= myPhoneBook->getNumEntries()-1){
+				qDebug()<< "Last entry found";
 				selection = myPhoneBook->getNumEntries()-1;
-				for(int i = myPhoneBook->getNumEntries()-1; i>=-1;i--){
+				for(int i = myPhoneBook->getNumEntries()-1; i>=myPhoneBook->getNumEntries()-5;i--){
+					slotIndex.prepend(i);
+				}
+			}
+			else if (selection >= myPhoneBook->getNumEntries()-5) {
+				for(int i = myPhoneBook->getNumEntries()-1; i>=myPhoneBook->getNumEntries()-5;i--){
 					slotIndex.prepend(i);
 				}
 			} else {
@@ -118,7 +125,8 @@ void PhoneBookDialog::updateScreen(Update_Types type)
 			;
 	}
 	qDebug()<<"pouet caca"<<selection;
-	for(int i=0;i<5;i++){
+	int i;
+	for(i=0;i<std::min(5,slotIndex.size());i++){
 		qDebug()<<"Slot index"<< i << ":" << slotIndex.at(i);
 		if(slotIndex.at(i) == -1){
 			updateContactSlot(i,"New contact",(slotIndex.at(i)==selection));
@@ -128,6 +136,9 @@ void PhoneBookDialog::updateScreen(Update_Types type)
 		else
 			updateContactSlot(i,"");
 		}
+	}
+	for(int j=i;j<5;j++){
+		updateContactSlot(i,"");
 	}
 }
 
@@ -156,6 +167,7 @@ void PhoneBookDialog::deleteContact(int index)
 
 void PhoneBookDialog::on_searchLineEdit_textChanged(const QString &text)
 {
+    if(text=="") return;
     qDebug() << ">>Text changed";
     // updates the screen so that the selected entry zeroes into closest match
     int i = myPhoneBook->findIndex(text);
@@ -166,11 +178,14 @@ void PhoneBookDialog::on_searchLineEdit_textChanged(const QString &text)
 
 void PhoneBookDialog::on_upButton_clicked()
 {
+    searchLineEdit->setText("");
     updateScreen(UP);
+    
 }
 
 void PhoneBookDialog::on_downButton_clicked()
 {
+    searchLineEdit->setText("");
     updateScreen(DOWN);
 }
 
@@ -187,10 +202,13 @@ void PhoneBookDialog::on_selectButton_clicked()
 	QObject::connect( myAddContactDialog, SIGNAL(editContact(NeoPhoneBookEntry *)), this, SLOT(replaceContact(NeoPhoneBookEntry *) ));
     }
     else {
-        ViewContactDialog *vcd = new ViewContactDialog(myPhoneBook->getElementAt(selection));
+        ViewContactDialog *vcd = new ViewContactDialog(this,selection);
         vcd->setAttribute(Qt::WA_DeleteOnClose);
         vcd->showMaximized();
+	QObject::connect( vcd, SIGNAL(deleteContact(int)), this, SLOT(deleteContact(int) ));
     }
+    updateScreen(REFRESH);
+
 }
 
 void PhoneBookDialog::on_deleteButton_clicked()

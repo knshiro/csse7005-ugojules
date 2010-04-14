@@ -21,7 +21,7 @@
 #include "ui_phonebookform.h"
 #include "neophonebook.h"
 #include "addcontactdialog.h"
-#include "viewcontactdialog.h"
+//#include "viewcontactdialog.h"
 #include <QtGui>
 
 class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
