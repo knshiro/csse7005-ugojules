@@ -22,6 +22,7 @@
 #include <qtopiaapplication.h>
 
 #include "neophonebookentry.h"
+#include "phonebookdialog.h"
 #include "ui_viewcontactform.h"
 
 class ViewContactDialog : public QWidget, public Ui_ViewContactDialog
@@ -29,7 +30,7 @@ class ViewContactDialog : public QWidget, public Ui_ViewContactDialog
     Q_OBJECT
 
     public:
-        ViewContactDialog(NeoPhoneBookEntry* entry, QWidget *parent=0, Qt::WFlags f = 0 );
+        ViewContactDialog(PhoneBookDialog* phoneBookDialog, int indexEntry, QWidget *parent=0, Qt::WFlags f = 0 );
         ~ViewContactDialog();
 
     private slots:
@@ -38,7 +39,10 @@ class ViewContactDialog : public QWidget, public Ui_ViewContactDialog
 	void on_callButton_clicked();
 
     private:
-	NeoPhoneBookEntry * entry;
+	PhoneBookDialog* phoneBookDialog;
+	int indexEntry;
+    signals:
+	void deleteContact(int index);
 };
 
 #endif
