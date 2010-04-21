@@ -16,7 +16,10 @@
 ****************************************************************************/
 
 #include "addcontactdialog.h"
+#include "selectcalldialog.h"
 #include <QImageDocumentSelectorDialog>
+#include <QContentFilter>
+
 AddContactDialog::AddContactDialog(QWidget *parent, Qt::WFlags f)
     : QWidget(parent, f)
 {
@@ -40,6 +43,10 @@ void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
     numberLineEdit->setText(entryToEdit->getPhoneNumber());
     emailLineEdit->setText(entryToEdit->getContactEmail());
     pictureFilePath = entryToEdit->getPictureFilePath();
+    ringToneLabel->setText(entryToEdit->getRingtone());
+    vibrationLabel->setText(entryToEdit->getVibrationPattern());
+    ledLabel->setText(entryToEdit->getLedPattern());
+    ringOptionComboBox->setCurrentIndex(entryToEdit->getRingOption());
     qDebug() << "Filename :" << entryToEdit->getPictureFilePath();
     if(entryToEdit->getPictureFilePath() != ""){
       picture = QPixmap(entryToEdit->getPictureFilePath());
@@ -101,3 +108,60 @@ void AddContactDialog::on_browsePushButton_clicked()
     }
 }
 
+void AddContactDialog::on_ringOptionComboBox_currentIndexChanged(int i){
+	
+	QColor colour; // you can use also QColor
+	QString fonttemplate = tr("<font color='%1'>%2</font>");
+	// ...
+	qDebug()<< "index:" << i;
+	if(i == 0) {
+		qDebug()<< "orchestra" << i;
+		colour = Qt::red;
+		ledPushButton->setEnabled(true);
+	}
+	else {
+		qDebug()<< "sync" << i;
+		colour = Qt::gray;
+		ledPushButton->setEnabled(false);
+	}
+	ledLabel->setText( fonttemplate.arg( colour.name(), ledLabel->text() ) );	
+
+}
+
+void AddContactDialog::on_ringTonePushButton_clicked(){
+	QContentFilter filter( QContentFilter::FileName, "*.aud" );
+	browseState = RINGTONE;
+	SelectCallDialog *dialog = new SelectCallDialog(filter); 
+	dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->showMaximized();
+}
+void AddContactDialog::on_ledPushButton_clicked(){
+	QContentFilter filter( QContentFilter::FileName, "*.led" );
+	browseState = LED;
+	SelectCallDialog *dialog = new SelectCallDialog(filter); 
+	dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->showMaximized();
+}
+void AddContactDialog::on_vibrationPushButton_clicked(){
+	QContentFilter filter( QContentFilter::FileName, "*.vib" );
+	browseState = VIBRATION;
+	SelectCallDialog *dialog = new SelectCallDialog(filter); 
+	dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->showMaximized(); 
+}
+
+void AddContactDialog::on_documentSelected(QContent content) {
+	switch(browseState){
+		case RINGTONE:
+			qDebug() << "Ringtone :" << content.fileName() << "selected";
+			break;
+		case LED:
+			qDebug() << "LED :" << content.fileName() << "selected";
+			break;
+		case VIBRATION:
+			qDebug() << "Vibration :" << content.fileName() << "selected";
+			break;
+		default:
+			;
+	}
+}

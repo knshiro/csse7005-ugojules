@@ -29,6 +29,10 @@ class AddContactDialog : public QWidget, public Ui_AddContactDialog
     Q_OBJECT
 
     public:
+	enum Browse_Type { RINGTONE, VIBRATION, LED};
+	
+	Browse_Type browseState;
+	
         AddContactDialog( QWidget *parent=0, Qt::WFlags f = 0 );
         void setupEdit(NeoPhoneBookEntry *entryToEdit);
         ~AddContactDialog();
@@ -43,6 +47,11 @@ class AddContactDialog : public QWidget, public Ui_AddContactDialog
 	void on_cancelPushButton_clicked();
 	void on_browsePushButton_clicked();
 	void on_removePushButton_clicked();
+	void on_ringOptionComboBox_currentIndexChanged(int i);
+	void on_ringTonePushButton_clicked();
+	void on_ledPushButton_clicked();
+	void on_vibrationPushButton_clicked();
+	void on_documentSelected(QContent content);
 
     signals:
       void editContact(NeoPhoneBookEntry *editEntry);

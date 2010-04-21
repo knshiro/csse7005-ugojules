@@ -22,12 +22,14 @@ HEADERS=neophonebookentry.h \
         neophonebook.h \
 	viewcontactdialog.h \
         addcontactdialog.h \
+	selectcalldialog.h \
         phonebookdialog.h
 SOURCES=neophonebookentry.cpp \ 
         neophonebook.cpp \
 	viewcontactdialog.cpp \
         addcontactdialog.cpp \
         phonebookdialog.cpp \
+	selectcalldialog.cpp \
         main.cpp
 
 # SXE information
