@@ -25,15 +25,25 @@ class NeoPhoneBookEntry
     public:
         NeoPhoneBookEntry();
         //NeoPhoneBookEntry(QString name, QString number);
-        NeoPhoneBookEntry(QString name, QString number, QString contactEmail = "", QString path = "");
+        NeoPhoneBookEntry(QString name, QString number, QString contactEmail = "", QString path = "", 
+		QString tone="Default", QString vpattern="Pulse", QString lpattern = "Pulse", int option = 0);
         QString getContactName();
         QString getPhoneNumber();
         QString getContactEmail();
         QString getPictureFilePath();
+	QString getRingtone();
+	QString getVibrationPattern();
+	QString getLedPattern();
+	int getRingOption();
         void setContactName(QString name);
         void setPhoneNumber(QString number);
         void setContactEmail(QString email);
         void setPictureFilePath(QString path);
+	void setRingTone(QString tone);
+	void setVibrationPattern(QString vpattern);
+	void setLedPattern(QString lpattern);
+	void setRingOption(int option);
+
         ~NeoPhoneBookEntry();
 
     private:
@@ -41,6 +51,10 @@ class NeoPhoneBookEntry
         QString phoneNumber;
         QString contactEmail;
         QString pictureFilePath;
+	QString ringtone;
+	QString vibrationPattern;
+	QString ledPattern;
+	int ringOption;
 };
 
 #endif

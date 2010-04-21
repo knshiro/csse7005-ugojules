@@ -23,14 +23,23 @@ NeoPhoneBookEntry::NeoPhoneBookEntry()
     phoneNumber = "";
     contactEmail = "";
     pictureFilePath = "";
+    ringtone = "Default";
+    vibrationPattern = "Pulse";
+    ledPattern = "Pulse";
+    ringOption = 0;
 }
 
-NeoPhoneBookEntry::NeoPhoneBookEntry(QString name, QString number, QString email, QString path)
+NeoPhoneBookEntry::NeoPhoneBookEntry(QString name, QString number, QString email, QString path, 
+	QString tone, QString vpattern, QString lpattern, int option)
 {
     contactName = name;
     phoneNumber = number;
     contactEmail = email;
     pictureFilePath = path;
+    ringtone = tone;
+    vibrationPattern = vpattern;
+    ledPattern = lpattern;
+    ringOption = option;
 }
 
 
@@ -55,6 +64,26 @@ QString NeoPhoneBookEntry::getPictureFilePath()
     return pictureFilePath;
 }
 
+QString NeoPhoneBookEntry::getRingtone()
+{
+    return ringtone;
+}
+
+QString NeoPhoneBookEntry::getVibrationPattern()
+{
+    return vibrationPattern;
+}
+
+QString NeoPhoneBookEntry::getLedPattern()
+{
+    return ledPattern;
+}
+
+int NeoPhoneBookEntry::getRingOption()
+{
+    return ringOption;
+}
+
 void NeoPhoneBookEntry::setContactName(QString name)
 {
     contactName = name;
@@ -74,6 +103,27 @@ void NeoPhoneBookEntry::setPictureFilePath(QString path)
 {
     pictureFilePath = path;
 }
+
+void NeoPhoneBookEntry::setRingTone(QString tone)
+{
+    ringtone = tone;
+}
+
+void NeoPhoneBookEntry::setVibrationPattern(QString vpattern)
+{
+    vibrationPattern = vpattern;
+}
+
+void NeoPhoneBookEntry::setLedPattern(QString lpattern)
+{
+    ledPattern = lpattern;
+}
+
+void NeoPhoneBookEntry::setRingOption(int option)
+{
+    ringOption = option;
+}
+
 
 NeoPhoneBookEntry::~NeoPhoneBookEntry()
 {
