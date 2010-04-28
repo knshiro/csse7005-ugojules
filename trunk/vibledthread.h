@@ -1,3 +1,4 @@
+ 
 /****************************************************************************
 **
 ** Copyright (C) 2009 by user *
@@ -15,34 +16,25 @@
 **
 ****************************************************************************/
 
-#ifndef RINGPATTERN_H
-#define RINGPATTERN_H
+#ifndef NEOPHONEBOOK_H
+#define NEOPHONEBOOK_H
 #include <QtGui>
 #include <qtopia/qtopiaapplication.h>
 
-class RingPattern : public QObject
-{
+class VibLedThread : public QThread
+ {
     Q_OBJECT
 
-    public:	
-		enum DeviceType {LED,VIB};
-		RingPattern();
-		void addPattern(QString fileName, DeviceType type);
-		void setPattern(QString fileName, DeviceType type);
-		void startVibrate();
-		void stopVibrate();
-        ~RingPattern();
 
-    private:
-		QMap<QString,QList<int>> vibPatterns;
-		QMap<QString,QList<int>> ledPatterns;
-		void playPattern();
-		QList<int> generateRandomPattern();
-		VibLedThread * blueThread;
-		VibLedThread * orangeThread;
-		VibLedThread * redThread;
-		VibLedThread * vibThread;	
-};
+	public:
+		VibLedThread(QString hardwareFile);
+    	void run();
+		void setPattern(QList<int> pattern);
 
-#endif
+	private:
+		QString hardwareFile;
+		QList pattern;
 
+	slots:
+		void step(int i);
+ };
