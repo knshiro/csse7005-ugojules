@@ -157,15 +157,20 @@ void AddContactDialog::on_vibrationPushButton_clicked(){
 }
 
 void AddContactDialog::setDocument(QContent content) {
+	QString filename = content.fileName().split("/").last();
 	switch(browseState){
 		case RINGTONE:
-			qDebug() << "Ringtone :" << content.fileName() << "selected";
+			qDebug() << "Ringtone :" << filename << "selected";
+			
+			ringToneLabel->setText(filename);
 			break;
 		case LED:
-			qDebug() << "LED :" << content.fileName() << "selected";
+			qDebug() << "LED :" << filename << "selected";
+			ledLabel->setText(filename);
 			break;
 		case VIBRATION:
-			qDebug() << "Vibration :" << content.fileName() << "selected";
+			qDebug() << "Vibration :" << filename << "selected";
+			vibrationLabel->setText(filename);
 			break;
 		default:
 			;
