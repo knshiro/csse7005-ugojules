@@ -19,11 +19,11 @@
 #include <QtGlobal> 
 
 VibLedThread::VibLedThread(QString hardwareFile){
-	this.hardwareFile=hardwareFile;
+	this->hardwareFile=hardwareFile;
 }
 
 void VibLedThread::setPattern(QList<int> pattern){
-	this.pattern=pattern;
+	this->pattern=pattern;
 }
 
 
@@ -34,18 +34,15 @@ void VibLedThread::VibLedThread::run()
 
 void VibLedThread::step(int i){
 	i=i+2;
+	QFile brightness( hardwareFile + "/brightness");
+	brightness.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+	QTextStream out(&brightness);
 	if(i<pattern.size()){
-		QFile brightness( harwareFile + "/brightness");
-		brightness.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
-		QTextStream out(&brightness);
 		out<<pattern.at(i);
 		brightness.close();
 		QTimer::singleShot(pattern.at(i+1), this, SLOT(step(i)));
 	}
 	else {
-		QFile brightness( harwareFile + "/brightness");
-		brightness.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
-		QTextStream out(&brightness);
 		out<<"0";
 		brightness.close();
 	}
