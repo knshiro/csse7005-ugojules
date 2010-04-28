@@ -31,6 +31,7 @@ class VibLedThread : public QThread
     	void run();
 		void setPattern(QList<int> pattern);
 		void stop();
+		~VibLedThread();
 
 	private:
 		QString hardwareFile;

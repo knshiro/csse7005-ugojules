@@ -48,6 +48,7 @@ PhoneBookDialog::PhoneBookDialog(QWidget *parent, Qt::WFlags f)
 PhoneBookDialog::~PhoneBookDialog()
 {
     // Do nothing for now
+	ringpattern->~RingPattern();
 }
 
 void PhoneBookDialog::updateContactSlot(int index, QString name, bool selected)

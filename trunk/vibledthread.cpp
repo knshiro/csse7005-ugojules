@@ -28,6 +28,7 @@ VibLedThread::VibLedThread(QString hardwareFile,QString name){
 
 }
 
+
 void VibLedThread::setPattern(QList<int> pattern){
 	this->pattern=pattern;
 }
@@ -68,3 +69,9 @@ void VibLedThread::stop(){
 	out<<"0";
 	brightness.close();
 }
+
+VibLedThread::~VibLedThread(){
+	stop();
+}
+
+
