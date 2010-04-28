@@ -70,5 +70,5 @@ void ViewContactDialog::on_deleteButton_clicked(){
 }
 
 void ViewContactDialog::on_callButton_clicked(){
-
+		emit callContact(indexEntry);
 }

@@ -2,7 +2,7 @@
 TEMPLATE=app
 
 # The binary name
-TARGET=assignment2
+TARGET=assignment3
 
 # This app uses Qtopia
 CONFIG+=qtopia
@@ -20,18 +20,20 @@ FORMS  =viewcontactform.ui \
         phonebookform.ui
 HEADERS=neophonebookentry.h \
         neophonebook.h \
-	viewcontactdialog.h \
+		viewcontactdialog.h \
         addcontactdialog.h \
-	selectcalldialog.h \
+		selectcalldialog.h \
         phonebookdialog.h \
-	vibledthread.h
+		vibledthread.h \
+		ringpattern.h
 SOURCES=neophonebookentry.cpp \ 
         neophonebook.cpp \
-	viewcontactdialog.cpp \
+		viewcontactdialog.cpp \
         addcontactdialog.cpp \
         phonebookdialog.cpp \
-	selectcalldialog.cpp \
-	vibledthread.cpp \
+		selectcalldialog.cpp \
+		vibledthread.cpp \
+		ringpattern.cpp \
         main.cpp
 
 # SXE information

@@ -16,8 +16,8 @@
 **
 ****************************************************************************/
 
-#ifndef NEOPHONEBOOK_H
-#define NEOPHONEBOOK_H
+#ifndef VIBLEDTHREAD_H
+#define VIBLEDTHREAD_H
 #include <QtGui>
 #include <qtopia/qtopiaapplication.h>
 
@@ -35,7 +35,7 @@ class VibLedThread : public QThread
 		QString hardwareFile;
 		QList<int> pattern;
 
-	private slots:
+	public slots:
 		void step(int i);
  };
 

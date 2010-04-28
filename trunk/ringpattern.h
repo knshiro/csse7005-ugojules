@@ -19,12 +19,15 @@
 #define RINGPATTERN_H
 #include <QtGui>
 #include <qtopia/qtopiaapplication.h>
+#include <QValueSpaceObject>
+#include <QValueSpaceItem>
+#include "vibledthread.h"
 
 class RingPattern : public QObject
 {
     Q_OBJECT
 
-    public:	
+    public:
 		enum DeviceType {LED,VIB};
 		RingPattern();
 		void addPattern(QString fileName, DeviceType type);
@@ -34,8 +37,8 @@ class RingPattern : public QObject
         ~RingPattern();
 
     private:
-		QMap<QString,QList<int>> vibPatterns;
-		QMap<QString,QList<int>> ledPatterns;
+		QMap<QString,QList<int> > vibPatterns;
+		QMap<QString,QList<int> > ledPatterns;
 		void playPattern();
 		QList<int> generateRandomPattern();
 		VibLedThread * blueThread;
