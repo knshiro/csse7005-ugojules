@@ -163,21 +163,37 @@ void PhoneBookDialog::replaceContact(NeoPhoneBookEntry *newEntry)
 
 void PhoneBookDialog::deleteContact(int index)
 {
+	ringpattern->stopVibrate();
+/*
     // delete contact in the phonebook
 	myPhoneBook->deleteEntry(index);
 	if(index==myPhoneBook->getNumEntries()) updateScreen(DELETE_LAST);
 	else updateScreen(REFRESH);
+*/
 }
 
 void PhoneBookDialog::callContact(int index){
-	//ringpattern->addPattern(myPhoneBook->getElementAt(index)->getVibrationPattern(),RingPattern::VIB);
+	// pour un file (faudrait peut etre faire addPattern a un autre moment...)
+	/*
+	ringpattern->addPattern("Sample2.vib",RingPattern::VIB);
+	ringpattern->setPattern("Sample2.vib",RingPattern::VIB);
+	ringpattern->addPattern("Flash2.led",RingPattern::LED);
+	ringpattern->setPattern("Flash2.led",RingPattern::LED);
+	ringpattern->startVibrate();
+*/
+
+	// pour pulse :
+	/*
 	ringpattern->setPattern("Pulse",RingPattern::VIB);
-	//ringpattern->addPattern(myPhoneBook->getElementAt(index)->getLedPattern(),RingPattern::LED);
 	ringpattern->setPattern("Pulse",RingPattern::LED);
 	ringpattern->startVibrate();
-	
-}
+	*/
 
+	// pour random :
+	ringpattern->setPattern("Random",RingPattern::VIB);
+	ringpattern->setPattern("Random",RingPattern::LED);
+	ringpattern->startVibrate();
+}
 
 
 void PhoneBookDialog::on_searchLineEdit_textChanged(const QString &text)

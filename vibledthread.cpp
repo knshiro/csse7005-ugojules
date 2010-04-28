@@ -18,8 +18,14 @@
 #include "vibledthread.h"
 #include <QtGlobal> 
 
-VibLedThread::VibLedThread(QString hardwareFile){
+VibLedThread::VibLedThread(QString hardwareFile,QString name){
 	this->hardwareFile=hardwareFile;
+	this->name=name;
+	timer = new QTimer(this);
+	timer->setSingleShot(true);
+	connect(timer, SIGNAL(timeout()), this, SLOT(step()));	
+	//connect(this, SIGNAL(stopTimer()), timer, SLOT(stop()));	
+
 }
 
 void VibLedThread::setPattern(QList<int> pattern){
@@ -29,23 +35,36 @@ void VibLedThread::setPattern(QList<int> pattern){
 
 void VibLedThread::VibLedThread::run()
 {
-	qDebug()<<"run";
-	step(-2);
+	qDebug()<<"run, pattern.size()="<< pattern.size();
+	index=0;
+	running=true;
+	step();
 }
 
-void VibLedThread::step(int i){
-	i=i+2;
-	qDebug()<<"step"<<i;
+void VibLedThread::step(){
 	QFile brightness( hardwareFile + "/brightness");
 	brightness.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 	QTextStream out(&brightness);
-	if(i<pattern.size()){
-		out<<pattern.at(i);
+	if((2*index<pattern.size())&&(running==true)){
+		out<<pattern.at(2*index);
 		brightness.close();
-		QTimer::singleShot(pattern.at(i+1), this, SLOT(step(i)));
+		index++;
+		timer->start(pattern.at(2*index-1));
+		qDebug()<<name<<": step"<<index<< "- timer set: " << pattern.at(2*index-1);
 	}
 	else {
 		out<<"0";
 		brightness.close();
+		qDebug()<<name<<": stopped at step"<<index;
 	}
+}
+
+void VibLedThread::stop(){
+	qDebug()<<"stopping";
+	running=false;
+	QFile brightness( hardwareFile + "/brightness");
+	brightness.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+	QTextStream out(&brightness);
+	out<<"0";
+	brightness.close();
 }

@@ -27,16 +27,22 @@ class VibLedThread : public QThread
 
 
 	public:
-		VibLedThread(QString hardwareFile);
+		VibLedThread(QString hardwareFile,QString name="");
     	void run();
 		void setPattern(QList<int> pattern);
+		void stop();
 
 	private:
 		QString hardwareFile;
 		QList<int> pattern;
+		int index;
+		QTimer *timer;
+		bool running;
+		QString name;
 
 	public slots:
-		void step(int i);
+		void step();
+	
  };
 
 #endif
