@@ -33,8 +33,10 @@ class VibLedThread : public QThread
 
 	private:
 		QString hardwareFile;
-		QList pattern;
+		QList<int> pattern;
 
-	slots:
+	private slots:
 		void step(int i);
  };
+
+#endif

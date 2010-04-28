@@ -23,13 +23,15 @@ HEADERS=neophonebookentry.h \
 	viewcontactdialog.h \
         addcontactdialog.h \
 	selectcalldialog.h \
-        phonebookdialog.h
+        phonebookdialog.h \
+	vibledthread.h
 SOURCES=neophonebookentry.cpp \ 
         neophonebook.cpp \
 	viewcontactdialog.cpp \
         addcontactdialog.cpp \
         phonebookdialog.cpp \
 	selectcalldialog.cpp \
+	vibledthread.cpp \
         main.cpp
 
 # SXE information
