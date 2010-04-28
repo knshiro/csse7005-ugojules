@@ -21,10 +21,10 @@
 RingPattern::RingPattern()
 {
 	// prepare threads
-	blueThread=new VibLedThread("/sys/class/leds/gta02-power:blue");
-	orangeThread=new VibLedThread("/sys/class/leds/gta02-power:orange");
-	redThread=new VibLedThread("/sys/class/leds/gta02-aux:red");
-	vibThread=new VibLedThread("/sys/class/leds/neo1973:vibrator");	
+	blueThread=new VibLedThread("/sys/class/leds/gta02-power:blue","blue led");
+	orangeThread=new VibLedThread("/sys/class/leds/gta02-power:orange","oran led");
+	redThread=new VibLedThread("/sys/class/leds/gta02-aux:red","red led ");
+	vibThread=new VibLedThread("/sys/class/leds/neo1973:vibrator","vib     ");	
 
 	// create pattern "Pulse" for vib
 	QList<int> vibPulse;
@@ -46,16 +46,18 @@ RingPattern::RingPattern()
 void RingPattern::addPattern(QString fileName, DeviceType type){
 	switch(type){
 	case VIB:
+		qDebug() << "vib pattern" << fileName << "already loaded";
 		if(vibPatterns.contains(fileName)) return;
 		break;
 	case LED:
+		qDebug() << "led pattern" << fileName << "already loaded";
 		if(ledPatterns.contains(fileName)) return;
 		break;
 	default: break;
 	}	
-
+	qDebug() << "adding pattern" << fileName;
 	int i;
-	QFile file(fileName);
+	QFile file("/home/root/Applications/CSSE4003/Documents/"+fileName);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
 		return;
 	
@@ -65,8 +67,9 @@ void RingPattern::addPattern(QString fileName, DeviceType type){
 	// scan file, concatenating everything in the list
 	while (!file.atEnd()) {
 		line = QString(file.readLine()).replace("\n","").split(",");
-		for(i=0;i<line.size();i++)
-			l.append(line.at(i).toInt());
+		if(line.size()>1) // to avoid read the line line containing just \n
+			for(i=0;i<line.size();i++)
+				l.append(line.at(i).toInt());
 	}
 	// put pattern in the corresponding list (depending on type of device)
 	switch(type){
@@ -87,19 +90,28 @@ void RingPattern::addPattern(QString fileName, DeviceType type){
 
 void RingPattern::setPattern(QString fileName, DeviceType type){
 	qDebug() << "setting pattern" << fileName;
-	QValueSpaceItem * item;
+	QValueSpaceObject * obj = new QValueSpaceObject("/CSSE4003");
+	
 	switch(type){
 	case VIB:
-		item = new QValueSpaceItem("/CSSE4003/VibPattern");
-		item->setValue(QVariant(fileName));
+		obj->setAttribute("VibPattern",fileName);
+		qDebug() << "set Vib pattern :" << fileName;
+
 		break;
 	case LED:
-		item = new QValueSpaceItem("/CSSE4003/LedPattern");
-		item->setValue(QVariant(fileName));
+		obj->setAttribute("LedPattern",fileName);
+		qDebug() << "set Led pattern :" << fileName;
 		break;
 	default:
+		qDebug() << "error switch";
 		break;
 	}
+	obj->sync();
+	// read space variables
+	QValueSpaceItem *ledsP = new QValueSpaceItem("/CSSE4003/LedPattern");
+	QValueSpaceItem *vibP = new QValueSpaceItem("/CSSE4003/VibPattern");
+
+	qDebug() << "  current pattern: (vib:" << vibP->value().toString() << ", leds:" << ledsP->value().toString() << ")" ;
 }
 
 void RingPattern::playPattern(){
@@ -113,6 +125,8 @@ void RingPattern::playPattern(){
 	// read space variables
 	QValueSpaceItem *ledsP = new QValueSpaceItem("/CSSE4003/LedPattern");
 	QValueSpaceItem *vibP = new QValueSpaceItem("/CSSE4003/VibPattern");
+
+	qDebug() << "  starting pattern (vib:" << vibP->value().toString() << ", leds:" << ledsP->value().toString() << ")" ;
 
 	// if led pattern is "Random", generate a random pattern
 	if(ledsP->value().toString().compare("Random")==0) {
@@ -144,8 +158,6 @@ void RingPattern::playPattern(){
 	redThread->setPattern(redLed);
 	vibThread->setPattern(vib);
 
-	qDebug() << "  starting pattern (vib:" << vibP->value().toString() << ", leds:" << ledsP->value().toString() << ")" ;
-
 	// start the threads
 	blueThread->start();
 	orangeThread->start();
@@ -159,9 +171,9 @@ QList<int> RingPattern::generateRandomPattern(){
 	QList<int> l;
 	int strength, duration, delay;
 	for(int i =0;i<10;i++){
-		strength = 100+(qrand()*155)/RAND_MAX;
-		duration = 50+(qrand()*1950)/RAND_MAX;
-		delay = 50+(qrand()*450)/RAND_MAX;
+		strength = 100+(int)(155*((double)qrand()/RAND_MAX));
+		duration = 50+(int)(1950*((double)qrand()/RAND_MAX));
+		delay = 50+(int)(450*((double)qrand()/RAND_MAX));
 		l << strength << duration << 0 << delay;
 	}
 	return l;
@@ -176,10 +188,10 @@ void RingPattern::startVibrate(){
 
 void RingPattern::stopVibrate(){
 	qDebug() << ">>>> stopVibrate";
-	blueThread->terminate();
-	orangeThread->terminate();
-	redThread->terminate();
-	vibThread->terminate();
+	blueThread->stop();
+	orangeThread->stop();
+	redThread->stop();
+	vibThread->stop();
 	qDebug() << "<<<< stopVibrate";
 }
 

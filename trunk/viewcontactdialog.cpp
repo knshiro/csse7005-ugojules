@@ -45,6 +45,7 @@ ViewContactDialog::~ViewContactDialog()
 }
 
 void ViewContactDialog::on_editButton_clicked(){
+
 	AddContactDialog *myAddContactDialog = new AddContactDialog();
         myAddContactDialog->setAttribute(Qt::WA_DeleteOnClose);
 	myAddContactDialog->setupEdit(phoneBookDialog->myPhoneBook->getElementAt(indexEntry));
