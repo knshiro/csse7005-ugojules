@@ -197,6 +197,9 @@ void RingPattern::stopVibrate(){
 
 RingPattern::~RingPattern()
 {
-    // Do nothing for now
+	blueThread->~VibLedThread();
+	orangeThread->~VibLedThread();
+	redThread->~VibLedThread();
+	vibThread->~VibLedThread();
 }
 
