@@ -133,24 +133,30 @@ void AddContactDialog::on_ringTonePushButton_clicked(){
 	browseState = RINGTONE;
 	SelectCallDialog *dialog = new SelectCallDialog(filter); 
 	dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->showMaximized();
+    connect( dialog, SIGNAL(documentSelected(QContent)),
+                 this, SLOT(setDocument(QContent)) );
+    dialog->showMaximized();
 }
 void AddContactDialog::on_ledPushButton_clicked(){
 	QContentFilter filter( QContentFilter::FileName, "*.led" );
 	browseState = LED;
 	SelectCallDialog *dialog = new SelectCallDialog(filter); 
 	dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->showMaximized();
+    connect( dialog, SIGNAL(documentSelected(QContent)),
+                 this, SLOT(setDocument(QContent)) );
+    dialog->showMaximized();
 }
 void AddContactDialog::on_vibrationPushButton_clicked(){
 	QContentFilter filter( QContentFilter::FileName, "*.vib" );
 	browseState = VIBRATION;
 	SelectCallDialog *dialog = new SelectCallDialog(filter); 
 	dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->showMaximized(); 
+    connect( dialog, SIGNAL(documentSelected(QContent)),
+                 this, SLOT(setDocument(QContent)) );
+    dialog->showMaximized(); 
 }
 
-void AddContactDialog::on_documentSelected(QContent content) {
+void AddContactDialog::setDocument(QContent content) {
 	switch(browseState){
 		case RINGTONE:
 			qDebug() << "Ringtone :" << content.fileName() << "selected";
