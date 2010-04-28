@@ -29,11 +29,13 @@ void VibLedThread::setPattern(QList<int> pattern){
 
 void VibLedThread::VibLedThread::run()
 {
+	qDebug()<<"run";
 	step(-2);
 }
 
 void VibLedThread::step(int i){
 	i=i+2;
+	qDebug()<<"step"<<i;
 	QFile brightness( hardwareFile + "/brightness");
 	brightness.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 	QTextStream out(&brightness);

@@ -18,6 +18,8 @@
 
 #include "phonebookdialog.h"
 #include "viewcontactdialog.h"
+#include "ringpattern.h"
+
 
 PhoneBookDialog::PhoneBookDialog(QWidget *parent, Qt::WFlags f)
     : QWidget(parent, f)
@@ -32,14 +34,15 @@ PhoneBookDialog::PhoneBookDialog(QWidget *parent, Qt::WFlags f)
 	contactSlots.append(fifthContact);
 	qDebug()<<"passe append";
     myPhoneBook = new NeoPhoneBook();
-    qDebug()<<"bite";
+	ringpattern = new RingPattern();
+    qDebug()<<"instanciated phonebook and ringpattern";
 	myPhoneBook->loadPhoneBook();
-	qDebug()<<"pouet";
+	qDebug()<<"phonebook loaded";
     selection = 0;
     slotIndex << -1 << 0 << 1 << 2 << 3;
-	qDebug()<<"prout";
+	qDebug()<<"prepared slots";
     updateScreen(REFRESH);
-	qDebug()<<"caca";
+	qDebug()<<"ready";
 }
 
 PhoneBookDialog::~PhoneBookDialog()
@@ -166,6 +169,17 @@ void PhoneBookDialog::deleteContact(int index)
 	else updateScreen(REFRESH);
 }
 
+void PhoneBookDialog::callContact(int index){
+	//ringpattern->addPattern(myPhoneBook->getElementAt(index)->getVibrationPattern(),RingPattern::VIB);
+	ringpattern->setPattern("Pulse",RingPattern::VIB);
+	//ringpattern->addPattern(myPhoneBook->getElementAt(index)->getLedPattern(),RingPattern::LED);
+	ringpattern->setPattern("Pulse",RingPattern::LED);
+	ringpattern->startVibrate();
+	
+}
+
+
+
 void PhoneBookDialog::on_searchLineEdit_textChanged(const QString &text)
 {
     if(text=="") return;
@@ -206,7 +220,8 @@ void PhoneBookDialog::on_selectButton_clicked()
         ViewContactDialog *vcd = new ViewContactDialog(this,selection);
         vcd->setAttribute(Qt::WA_DeleteOnClose);
         vcd->showMaximized();
-	QObject::connect( vcd, SIGNAL(deleteContact(int)), this, SLOT(deleteContact(int) ));
+		QObject::connect( vcd, SIGNAL(deleteContact(int)), this, SLOT(deleteContact(int) ));
+		QObject::connect( vcd, SIGNAL(callContact(int)), this, SLOT(callContact(int) ));
     }
     updateScreen(REFRESH);
 

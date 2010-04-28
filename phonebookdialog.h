@@ -21,7 +21,7 @@
 #include "ui_phonebookform.h"
 #include "neophonebook.h"
 #include "addcontactdialog.h"
-//#include "viewcontactdialog.h"
+#include "ringpattern.h"
 #include <QtGui>
 
 class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
@@ -41,16 +41,18 @@ class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
         void addContact(NeoPhoneBookEntry *newEntry);
         void replaceContact(NeoPhoneBookEntry *newEntry);
         void deleteContact(int index);
-	void on_searchLineEdit_textChanged(const QString &text);
-	void on_upButton_clicked();
-	void on_downButton_clicked();
-	void on_selectButton_clicked();
-	void on_deleteButton_clicked();
+		void callContact(int index);
+		void on_searchLineEdit_textChanged(const QString &text);
+		void on_upButton_clicked();
+		void on_downButton_clicked();
+		void on_selectButton_clicked();
+		void on_deleteButton_clicked();
 
     private:
         int selection;
         QList<int> slotIndex;
-	QList<QLabel*> contactSlots;
+		QList<QLabel*> contactSlots;
+		RingPattern *ringpattern;
 };
 
 #endif
