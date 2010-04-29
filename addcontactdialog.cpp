@@ -59,20 +59,23 @@ void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
 
 void AddContactDialog::on_savePushButton_clicked()
 {
-       qDebug() << ">>>> Save Clicked";
-       if(editEntry != NULL){
-	 editEntry-> setContactName(nameLineEdit->text());
-         editEntry-> setPhoneNumber(numberLineEdit->text());
-         editEntry-> setContactEmail(emailLineEdit->text());
-	 qDebug() << "Picture path:" << pictureFilePath;
-         editEntry-> setPictureFilePath(pictureFilePath);
-         emit editContact(editEntry);
-       }
-       else {
-	NeoPhoneBookEntry *newEntry = new NeoPhoneBookEntry(nameLineEdit->text(), numberLineEdit->text(), emailLineEdit->text(),pictureFilePath);
-         emit addContact(newEntry);
-       }
-	close();
+    qDebug() << ">>>> Save Clicked";
+    if(editEntry != NULL){
+	    editEntry->setContactName(nameLineEdit->text());
+        editEntry->setPhoneNumber(numberLineEdit->text());
+        editEntry->setContactEmail(emailLineEdit->text());
+        editEntry->setPictureFilePath(pictureFilePath);
+        editEntry->setRingTone(ringToneLabel->text());
+        editEntry->setVibrationPattern(vibrationLabel->text());
+        editEntry->setLedPattern(ledLabel->text());
+        editEntry->setRingOption(ringOptionComboBox->currentIndex ());
+        emit editContact(editEntry);
+    }
+    else {
+	    NeoPhoneBookEntry *newEntry = new NeoPhoneBookEntry(nameLineEdit->text(), numberLineEdit->text(), emailLineEdit->text(),pictureFilePath, ringToneLabel->text(), vibrationLabel->text(), ledLabel->text(), ringOptionComboBox->currentIndex());
+        emit addContact(newEntry);
+    }
+close();
 }
 
 
@@ -129,35 +132,31 @@ void AddContactDialog::on_ringOptionComboBox_currentIndexChanged(int i){
 }
 
 void AddContactDialog::on_ringTonePushButton_clicked(){
-	QContentFilter filter( QContentFilter::FileName, "*.aud" );
 	browseState = RINGTONE;
-	SelectCallDialog *dialog = new SelectCallDialog(filter); 
+	SelectCallDialog *dialog = new SelectCallDialog(ringToneLabel->text(), ".aud" ); 
 	dialog->setAttribute(Qt::WA_DeleteOnClose);
-    connect( dialog, SIGNAL(documentSelected(QContent)),
-                 this, SLOT(setDocument(QContent)) );
+    connect( dialog, SIGNAL(fileSelected(QString)),
+                 this, SLOT(setFile(QString)) );
     dialog->showMaximized();
 }
 void AddContactDialog::on_ledPushButton_clicked(){
-	QContentFilter filter( QContentFilter::FileName, "*.led" );
 	browseState = LED;
-	SelectCallDialog *dialog = new SelectCallDialog(filter); 
+	SelectCallDialog *dialog = new SelectCallDialog(ledLabel->text(), ".led", "Pulse"); 
 	dialog->setAttribute(Qt::WA_DeleteOnClose);
-    connect( dialog, SIGNAL(documentSelected(QContent)),
-                 this, SLOT(setDocument(QContent)) );
+    connect( dialog, SIGNAL(fileSelected(QString)),
+                 this, SLOT(setFile(QString)) );
     dialog->showMaximized();
 }
 void AddContactDialog::on_vibrationPushButton_clicked(){
-	QContentFilter filter( QContentFilter::FileName, "*.vib" );
 	browseState = VIBRATION;
-	SelectCallDialog *dialog = new SelectCallDialog(filter); 
+	SelectCallDialog *dialog = new SelectCallDialog(vibrationLabel->text(), ".vib", "Pulse"); 
 	dialog->setAttribute(Qt::WA_DeleteOnClose);
-    connect( dialog, SIGNAL(documentSelected(QContent)),
-                 this, SLOT(setDocument(QContent)) );
+    connect( dialog, SIGNAL(fileSelected(QString)),
+                 this, SLOT(setFile(QString)) );
     dialog->showMaximized(); 
 }
 
-void AddContactDialog::setDocument(QContent content) {
-	QString filename = content.fileName().split("/").last();
+void AddContactDialog::setFile(QString filename) {
 	switch(browseState){
 		case RINGTONE:
 			qDebug() << "Ringtone :" << filename << "selected";

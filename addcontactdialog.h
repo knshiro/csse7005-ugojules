@@ -51,7 +51,7 @@ class AddContactDialog : public QWidget, public Ui_AddContactDialog
 	void on_ringTonePushButton_clicked();
 	void on_ledPushButton_clicked();
 	void on_vibrationPushButton_clicked();
-	void setDocument(QContent content);
+	void setFile(QString filename);
 
     signals:
       void editContact(NeoPhoneBookEntry *editEntry);

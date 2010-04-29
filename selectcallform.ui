@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog" >
+ <class>SelectCallDialog</class>
+ <widget class="QDialog" name="SelectCallDialog" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -12,28 +12,47 @@
   <property name="windowTitle" >
    <string>Dialog</string>
   </property>
-  <widget class="QListView" name="filesListView" >
+  <property name="modal" >
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="" >
    <property name="geometry" >
     <rect>
-     <x>40</x>
-     <y>20</y>
-     <width>381</width>
-     <height>351</height>
+     <x>10</x>
+     <y>10</y>
+     <width>461</width>
+     <height>421</height>
     </rect>
    </property>
-  </widget>
-  <widget class="QPushButton" name="selectPushButton" >
-   <property name="geometry" >
-    <rect>
-     <x>190</x>
-     <y>390</y>
-     <width>80</width>
-     <height>27</height>
-    </rect>
-   </property>
-   <property name="text" >
-    <string>Select</string>
-   </property>
+   <layout class="QVBoxLayout" >
+    <item>
+     <widget class="QListWidget" name="filesListWidget" >
+      <item>
+       <property name="text" >
+        <string>Default</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" >
+      <item>
+       <widget class="QPushButton" name="selectPushButton" >
+        <property name="text" >
+         <string>Select</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="cancelPushButton" >
+        <property name="text" >
+         <string>Cancel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
