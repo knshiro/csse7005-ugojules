@@ -22,6 +22,7 @@
 
 class NeoPhoneBookEntry
 {
+    
     public:
         NeoPhoneBookEntry();
         //NeoPhoneBookEntry(QString name, QString number);

@@ -19,6 +19,7 @@
 #include "phonebookdialog.h"
 
 
+
 ViewContactDialog::ViewContactDialog(PhoneBookDialog *phoneBookDialog, int indexEntry, QWidget *parent, Qt::WFlags f)
     : QWidget(parent, f)
 {
@@ -42,6 +43,7 @@ ViewContactDialog::ViewContactDialog(PhoneBookDialog *phoneBookDialog, int index
 ViewContactDialog::~ViewContactDialog()
 {
     // Do nothing
+    emit stopCall();
 }
 
 void ViewContactDialog::on_editButton_clicked(){
@@ -50,6 +52,7 @@ void ViewContactDialog::on_editButton_clicked(){
         myAddContactDialog->setAttribute(Qt::WA_DeleteOnClose);
 	myAddContactDialog->setupEdit(phoneBookDialog->myPhoneBook->getElementAt(indexEntry));
         myAddContactDialog->showMaximized();
+    
 	QObject::connect( myAddContactDialog, SIGNAL(addContact(NeoPhoneBookEntry *)), phoneBookDialog, SLOT(addContact(NeoPhoneBookEntry *) ));
 	QObject::connect( myAddContactDialog, SIGNAL(editContact(NeoPhoneBookEntry *)), phoneBookDialog, SLOT(replaceContact(NeoPhoneBookEntry *) ));
 	close();
@@ -73,3 +76,5 @@ void ViewContactDialog::on_deleteButton_clicked(){
 void ViewContactDialog::on_callButton_clicked(){
 		emit callContact(indexEntry);
 }
+
+

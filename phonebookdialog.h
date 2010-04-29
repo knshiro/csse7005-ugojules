@@ -24,11 +24,13 @@
 #include "ringpattern.h"
 #include <QtGui>
 
+
 class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
 {
     Q_OBJECT
     public:
         enum Update_Types { UP, DOWN, REFRESH, DELETE_LAST };
+    
 
         PhoneBookDialog( QWidget *parent = 0, Qt::WFlags f = 0 );
         void updateScreen(Update_Types);
@@ -36,12 +38,14 @@ class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
         ~PhoneBookDialog();
 
         NeoPhoneBook *myPhoneBook;
+        void loadPatterns();
 
     private slots:
         void addContact(NeoPhoneBookEntry *newEntry);
         void replaceContact(NeoPhoneBookEntry *newEntry);
         void deleteContact(int index);
 		void callContact(int index);
+        void stopCall();
 		void on_searchLineEdit_textChanged(const QString &text);
 		void on_upButton_clicked();
 		void on_downButton_clicked();

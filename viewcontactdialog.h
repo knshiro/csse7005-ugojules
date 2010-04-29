@@ -32,7 +32,8 @@ class ViewContactDialog : public QWidget, public Ui_ViewContactDialog
     public:
         ViewContactDialog(PhoneBookDialog* phoneBookDialog, int indexEntry, QWidget *parent=0, Qt::WFlags f = 0 );
         ~ViewContactDialog();
-
+        
+            
     private slots:
 	void on_editButton_clicked();
 	void on_deleteButton_clicked();
@@ -41,9 +42,12 @@ class ViewContactDialog : public QWidget, public Ui_ViewContactDialog
     private:
 	PhoneBookDialog* phoneBookDialog;
 	int indexEntry;
+
+    
     signals:
 	void deleteContact(int index);
 	void callContact(int index);
+    void stopCall();
 };
 
 #endif

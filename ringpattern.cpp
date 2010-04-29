@@ -57,7 +57,11 @@ void RingPattern::addPattern(QString fileName, DeviceType type){
 	}	
 	qDebug() << "adding pattern" << fileName;
 	int i;
-	QFile file("/home/root/Applications/CSSE4003/Documents/"+fileName);
+    QDir dir = QDir::home();
+    if(!dir.cd("Documents")){
+        return;
+    }
+	QFile file(dir.filePath(fileName));
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
 		return;
 	

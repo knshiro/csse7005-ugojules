@@ -141,7 +141,7 @@ void AddContactDialog::on_ringTonePushButton_clicked(){
 }
 void AddContactDialog::on_ledPushButton_clicked(){
 	browseState = LED;
-	SelectCallDialog *dialog = new SelectCallDialog(ledLabel->text(), ".led", "Pulse"); 
+	SelectCallDialog *dialog = new SelectCallDialog(ledLabel->text(), ".led", "Pulse", "Random"); 
 	dialog->setAttribute(Qt::WA_DeleteOnClose);
     connect( dialog, SIGNAL(fileSelected(QString)),
                  this, SLOT(setFile(QString)) );
@@ -149,7 +149,7 @@ void AddContactDialog::on_ledPushButton_clicked(){
 }
 void AddContactDialog::on_vibrationPushButton_clicked(){
 	browseState = VIBRATION;
-	SelectCallDialog *dialog = new SelectCallDialog(vibrationLabel->text(), ".vib", "Pulse"); 
+	SelectCallDialog *dialog = new SelectCallDialog(vibrationLabel->text(), ".vib", "Pulse","Random"); 
 	dialog->setAttribute(Qt::WA_DeleteOnClose);
     connect( dialog, SIGNAL(fileSelected(QString)),
                  this, SLOT(setFile(QString)) );
