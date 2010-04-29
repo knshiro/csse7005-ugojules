@@ -19,7 +19,7 @@ SelectCallDialog::SelectCallDialog(QString selected, QString extension, QString 
        filesListWidget->item(0)->setText(defaultName);
     }
     if(randomName != ""){
-       filesListWidget->item(0)->setText(defaultName);
+       filesListWidget->addItem( randomName );
     }
 
     QFileInfoList list = dir.entryInfoList();

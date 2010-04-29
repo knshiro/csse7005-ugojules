@@ -186,15 +186,12 @@ void PhoneBookDialog::callContact(int index){
     NeoPhoneBookEntry* contact = myPhoneBook->getElementAt(index);
     // pour un file (faudrait peut etre faire addPattern a un autre moment...)
 	
-
+    qDebug() << "Vibration pattern :" << contact->getVibrationPattern();
     ringpattern->setPattern(contact->getVibrationPattern(),RingPattern::VIB);
-    
-    if(contact->getRingOption() == 0){
-        ringpattern->setPattern(contact->getLedPattern(),RingPattern::LED);
-    }
-    else{
-        ringpattern->setPattern(contact->getLedPattern(),RingPattern::LED);
-    }
+    qDebug() << "Led pattern :" << contact->getLedPattern();
+    ringpattern->setPattern(contact->getLedPattern(),RingPattern::LED);
+    ringpattern->setSynchronized( contact->getRingOption() == 1);
+
 	ringpattern->startVibrate();
 
 /*

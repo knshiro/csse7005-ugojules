@@ -15,16 +15,25 @@
 **
 ****************************************************************************/
 
+
+
+
+
 #include "ringpattern.h"
 #include <QtGlobal>
 
 RingPattern::RingPattern()
 {
+    synchronized = false;
+
 	// prepare threads
 	blueThread=new VibLedThread("/sys/class/leds/gta02-power:blue","blue led");
 	orangeThread=new VibLedThread("/sys/class/leds/gta02-power:orange","oran led");
 	redThread=new VibLedThread("/sys/class/leds/gta02-aux:red","red led ");
-	vibThread=new VibLedThread("/sys/class/leds/neo1973:vibrator","vib     ");	
+	vibThread=new VibLedThread("/sys/class/leds/neo1973:vibrator","vib     ");
+    
+
+    valueSpace = new QValueSpaceObject("/CSSE4003");
 
 	// create pattern "Pulse" for vib
 	QList<int> vibPulse;
@@ -94,28 +103,46 @@ void RingPattern::addPattern(QString fileName, DeviceType type){
 
 void RingPattern::setPattern(QString fileName, DeviceType type){
 	qDebug() << "setting pattern" << fileName;
-	QValueSpaceObject * obj = new QValueSpaceObject("/CSSE4003");
+    QValueSpaceItem *ledsP = new QValueSpaceItem("/CSSE4003/LedPattern");
+    QValueSpaceItem *vibP = new QValueSpaceItem("/CSSE4003/VibPattern");
+    qDebug() << " 1st current pattern: (vib:" << vibP->value().toString() << ", leds:" << ledsP->value().toString() << ")" ;
+	//QValueSpaceObject obj("/CSSE4003");
+    QValueSpaceItem *tempP;
 	
 	switch(type){
 	case VIB:
-		obj->setAttribute("VibPattern",fileName);
+        tempP = new QValueSpaceItem("/CSSE4003/VibPattern");
+        qDebug() << "/CSSE4003/VibPattern =" <<tempP->value();
+        if(tempP->value() == QVariant("")){
+            qDebug() << "Remove value" << tempP->value().toString() << "from /CSSE4003/VibPattern" ;
+            valueSpace->removeAttribute("VibPattern");
+            valueSpace->sync();
+        }
+		valueSpace->setAttribute("VibPattern",fileName);
 		qDebug() << "set Vib pattern :" << fileName;
 
 		break;
 	case LED:
-		obj->setAttribute("LedPattern",fileName);
+        tempP = new QValueSpaceItem("/CSSE4003/LedPattern");
+        qDebug() << "/CSSE4003/LedPattern =" << tempP->value();
+        if(tempP->value() == QVariant("")){
+            qDebug() << "Remove value" << tempP->value().toString() << "from /CSSE4003/LedPattern" ;
+            valueSpace->removeAttribute("LedPattern");
+            valueSpace->sync();
+        }
+		valueSpace->setAttribute("LedPattern",fileName);
 		qDebug() << "set Led pattern :" << fileName;
 		break;
 	default:
 		qDebug() << "error switch";
 		break;
 	}
-	obj->sync();
+	valueSpace->sync();
 	// read space variables
-	QValueSpaceItem *ledsP = new QValueSpaceItem("/CSSE4003/LedPattern");
-	QValueSpaceItem *vibP = new QValueSpaceItem("/CSSE4003/VibPattern");
+	ledsP = new QValueSpaceItem("/CSSE4003/LedPattern");
+	vibP = new QValueSpaceItem("/CSSE4003/VibPattern");
 
-	qDebug() << "  current pattern: (vib:" << vibP->value().toString() << ", leds:" << ledsP->value().toString() << ")" ;
+	qDebug() << " 2nd current pattern: (vib:" << vibP->value().toString() << ", leds:" << ledsP->value().toString() << ")" ;
 }
 
 void RingPattern::playPattern(){
@@ -132,29 +159,36 @@ void RingPattern::playPattern(){
 
 	qDebug() << "  starting pattern (vib:" << vibP->value().toString() << ", leds:" << ledsP->value().toString() << ")" ;
 
-	// if led pattern is "Random", generate a random pattern
-	if(ledsP->value().toString().compare("Random")==0) {
-		blueLed = generateRandomPattern();
-		orangeLed = generateRandomPattern();
-		redLed = generateRandomPattern();
-	}
-	else {
-		// split the leds global pattern into 3 patterns (1 for each led)
-		QList<int> l = ledPatterns[ledsP->value().toString()];
-		for(i=0;i<l.size();i+=5){
-			blueLed.append(l[i]*l[i+3]); blueLed.append(l[i+4]);
-			orangeLed.append(l[i+1]*l[i+3]); orangeLed.append(l[i+4]);
-			redLed.append(l[i+2]*l[i+3]); redLed.append(l[i+4]);
-		}
-	}
+    // if vib pattern is "Random", generate a random one
+    if(vibP->value().toString().compare("Random")==0) {
+        vib = generateRandomPattern();
+    }
+    else {
+        vib = vibPatterns[vibP->value().toString()];
+    }
 
-	// if vib pattern is "Random", generate a random one
-	if(vibP->value().toString().compare("Random")==0) {
-		vib = generateRandomPattern();
-	}
-	else {
-		vib = vibPatterns[vibP->value().toString()];
-	}
+    if(!synchronized){
+	    // if led pattern is "Random", generate a random pattern
+	    if(ledsP->value().toString().compare("Random")==0) {
+		    blueLed = generateRandomPattern();
+		    orangeLed = generateRandomPattern();
+		    redLed = generateRandomPattern();
+	    }
+	    else {
+		    // split the leds global pattern into 3 patterns (1 for each led)
+		    QList<int> l = ledPatterns[ledsP->value().toString()];
+		    for(i=0;i<l.size();i+=5){
+			    blueLed.append(l[i]*l[i+3]); blueLed.append(l[i+4]);
+			    orangeLed.append(l[i+1]*l[i+3]); orangeLed.append(l[i+4]);
+			    redLed.append(l[i+2]*l[i+3]); redLed.append(l[i+4]);
+		    }
+	    }
+    } else {
+        blueLed = vib;
+        orangeLed = vib;
+        redLed = vib;
+    }
+	
 
 	// set patterns in threads
 	blueThread->setPattern(blueLed);
@@ -183,6 +217,12 @@ QList<int> RingPattern::generateRandomPattern(){
 	return l;
 }
 
+bool RingPattern::isSynchronized(){
+    return synchronized;
+}
+void RingPattern::setSynchronized(bool sync){
+    synchronized = sync;
+}
 
 void RingPattern::startVibrate(){
 	qDebug() << ">>>> startVibrate";
