@@ -25,27 +25,27 @@
 #include <QDocumentSelector>
 #include <QContent>
 
-#include "neophonebookentry.h"
-#include "ui_addcontactform.h"
+#include "ui_selectcallform.h"
 
-class SelectCallDialog : public QDialog {
+class SelectCallDialog : public QDialog , public Ui_SelectCallDialog{
 	
 	Q_OBJECT
 
     public:
 		
-    SelectCallDialog( QContentFilter filter, QWidget *parent=0, Qt::WFlags f = 0 );
+    SelectCallDialog( QString selected, QString extension, QString defaultName = "", QWidget *parent=0, Qt::WFlags f = 0 );
     ~SelectCallDialog();
 
     private:
-    QStackedLayout *layout;
-    QDocumentSelector *documentSelector;
+    QDir dir;
 
     private slots:
-	void openDocument(QContent);
+	void on_selectPushButton_clicked();
+    void on_cancelPushButton_clicked();
 
     signals:
-    void documentSelected(QContent);
+    void fileSelected(QString filename);
 
 };
+
 #endif

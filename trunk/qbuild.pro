@@ -16,7 +16,8 @@ CONFIG+=qtopia
 
 # These are the source files that get built to create the application
 FORMS  =viewcontactform.ui \
-	addcontactform.ui \
+	    addcontactform.ui \
+        selectcallform.ui \
         phonebookform.ui
 HEADERS=neophonebookentry.h \
         neophonebook.h \
