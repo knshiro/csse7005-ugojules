@@ -34,7 +34,7 @@ ViewContactDialog::ViewContactDialog(PhoneBookDialog *phoneBookDialog, int index
 	pic.load(entry->getPictureFilePath());
 	qDebug() << "Picture size :" << pic.size();
 	qDebug() << "Label width :" << pictureLabel->width();
-	pic = pic.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
+	pic = pic.scaled(QSize(pictureLabel->width(),pictureLabel->height()),Qt::KeepAspectRatio,Qt::SmoothTransformation);
 	qDebug() << "Picture scaled size :" << pic.size();
 	pictureLabel->setPixmap(pic);
 

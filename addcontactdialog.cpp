@@ -50,7 +50,7 @@ void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
     qDebug() << "Filename :" << entryToEdit->getPictureFilePath();
     if(entryToEdit->getPictureFilePath() != ""){
       picture = QPixmap(entryToEdit->getPictureFilePath());
-      picture = picture.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
+      picture = picture.scaled(QSize(pictureLabel->width(),pictureLabel->height()),Qt::KeepAspectRatio,Qt::SmoothTransformation);
       pictureLabel->setPixmap(picture);
       removePushButton->setEnabled(true);
     }
@@ -60,22 +60,24 @@ void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
 void AddContactDialog::on_savePushButton_clicked()
 {
     qDebug() << ">>>> Save Clicked";
-    if(editEntry != NULL){
-	    editEntry->setContactName(nameLineEdit->text());
-        editEntry->setPhoneNumber(numberLineEdit->text());
-        editEntry->setContactEmail(emailLineEdit->text());
-        editEntry->setPictureFilePath(pictureFilePath);
-        editEntry->setRingTone(ringToneLabel->text());
-        editEntry->setVibrationPattern(vibrationLabel->text());
-        editEntry->setLedPattern(ledLabel->text());
-        editEntry->setRingOption(ringOptionComboBox->currentIndex ());
-        emit editContact(editEntry);
+    if(nameLineEdit->text() != "" && numberLineEdit->text() != ""){
+        if(editEntry != NULL){
+	        editEntry->setContactName(nameLineEdit->text());
+            editEntry->setPhoneNumber(numberLineEdit->text());
+            editEntry->setContactEmail(emailLineEdit->text());
+            editEntry->setPictureFilePath(pictureFilePath);
+            editEntry->setRingTone(ringToneLabel->text());
+            editEntry->setVibrationPattern(vibrationLabel->text());
+            editEntry->setLedPattern(ledLabel->text());
+            editEntry->setRingOption(ringOptionComboBox->currentIndex ());
+            emit editContact(editEntry);
+        }
+        else {
+	        NeoPhoneBookEntry *newEntry = new NeoPhoneBookEntry(nameLineEdit->text(), numberLineEdit->text(), emailLineEdit->text(),pictureFilePath, ringToneLabel->text(), vibrationLabel->text(), ledLabel->text(), ringOptionComboBox->currentIndex());
+            emit addContact(newEntry);
+        }
     }
-    else {
-	    NeoPhoneBookEntry *newEntry = new NeoPhoneBookEntry(nameLineEdit->text(), numberLineEdit->text(), emailLineEdit->text(),pictureFilePath, ringToneLabel->text(), vibrationLabel->text(), ledLabel->text(), ringOptionComboBox->currentIndex());
-        emit addContact(newEntry);
-    }
-close();
+    close();
 }
 
 
@@ -103,7 +105,7 @@ void AddContactDialog::on_browsePushButton_clicked()
         pictureFilePath = content.fileName ();
 	picture = QPixmap(pictureFilePath);
 	qDebug() << "Filename :" << pictureFilePath;
-        picture = picture.scaled(QSize(pictureLabel->width(),1000),Qt::KeepAspectRatio,Qt::SmoothTransformation);
+        picture = picture.scaled(QSize(pictureLabel->width(),pictureLabel->height()),Qt::KeepAspectRatio,Qt::SmoothTransformation);
         pictureLabel->setPixmap(picture);
 		removePushButton->setEnabled(true);
     } else {
