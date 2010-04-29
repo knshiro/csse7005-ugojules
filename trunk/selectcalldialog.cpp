@@ -3,7 +3,7 @@
 #include <QDir>
 #include <iostream>
 
-SelectCallDialog::SelectCallDialog(QString selected, QString extension, QString defaultName, QWidget *parent, Qt::WFlags f)
+SelectCallDialog::SelectCallDialog(QString selected, QString extension, QString defaultName, QString randomName, QWidget *parent, Qt::WFlags f)
 	: QDialog( parent, f )
 {
     setupUi(this);
@@ -16,6 +16,9 @@ SelectCallDialog::SelectCallDialog(QString selected, QString extension, QString 
     dir.setSorting(QDir::Name);
 
     if(defaultName != ""){
+       filesListWidget->item(0)->setText(defaultName);
+    }
+    if(randomName != ""){
        filesListWidget->item(0)->setText(defaultName);
     }
 

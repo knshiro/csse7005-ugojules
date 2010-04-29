@@ -33,7 +33,7 @@ class SelectCallDialog : public QDialog , public Ui_SelectCallDialog{
 
     public:
 		
-    SelectCallDialog( QString selected, QString extension, QString defaultName = "", QWidget *parent=0, Qt::WFlags f = 0 );
+    SelectCallDialog( QString selected, QString extension, QString defaultName = "", QString randomName = "", QWidget *parent=0, Qt::WFlags f = 0 );
     ~SelectCallDialog();
 
     private:

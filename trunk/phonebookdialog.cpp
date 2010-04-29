@@ -43,6 +43,12 @@ PhoneBookDialog::PhoneBookDialog(QWidget *parent, Qt::WFlags f)
 	qDebug()<<"prepared slots";
     updateScreen(REFRESH);
 	qDebug()<<"ready";
+
+    //Load patterns
+    loadPatterns();
+
+
+
 }
 
 PhoneBookDialog::~PhoneBookDialog()
@@ -164,36 +170,46 @@ void PhoneBookDialog::replaceContact(NeoPhoneBookEntry *newEntry)
 
 void PhoneBookDialog::deleteContact(int index)
 {
-	ringpattern->stopVibrate();
-/*
     // delete contact in the phonebook
 	myPhoneBook->deleteEntry(index);
 	if(index==myPhoneBook->getNumEntries()) updateScreen(DELETE_LAST);
 	else updateScreen(REFRESH);
-*/
+
+}
+
+void PhoneBookDialog::stopCall(){
+    ringpattern->stopVibrate();
 }
 
 void PhoneBookDialog::callContact(int index){
-	// pour un file (faudrait peut etre faire addPattern a un autre moment...)
-	/*
-	ringpattern->addPattern("Sample2.vib",RingPattern::VIB);
-	ringpattern->setPattern("Sample2.vib",RingPattern::VIB);
-	ringpattern->addPattern("Flash2.led",RingPattern::LED);
-	ringpattern->setPattern("Flash2.led",RingPattern::LED);
-	ringpattern->startVibrate();
-*/
+	
+    NeoPhoneBookEntry* contact = myPhoneBook->getElementAt(index);
+    // pour un file (faudrait peut etre faire addPattern a un autre moment...)
+	
 
+    ringpattern->setPattern(contact->getVibrationPattern(),RingPattern::VIB);
+    
+    if(contact->getRingOption() == 0){
+        ringpattern->setPattern(contact->getLedPattern(),RingPattern::LED);
+    }
+    else{
+        ringpattern->setPattern(contact->getLedPattern(),RingPattern::LED);
+    }
+	ringpattern->startVibrate();
+
+/*
 	// pour pulse :
-	/*
+	
 	ringpattern->setPattern("Pulse",RingPattern::VIB);
 	ringpattern->setPattern("Pulse",RingPattern::LED);
 	ringpattern->startVibrate();
-	*/
+	
 
 	// pour random :
 	ringpattern->setPattern("Random",RingPattern::VIB);
 	ringpattern->setPattern("Random",RingPattern::LED);
 	ringpattern->startVibrate();
+*/
 }
 
 
@@ -235,10 +251,12 @@ void PhoneBookDialog::on_selectButton_clicked()
     }
     else {
         ViewContactDialog *vcd = new ViewContactDialog(this,selection);
-        vcd->setAttribute(Qt::WA_DeleteOnClose);
-        vcd->showMaximized();
+        
 		QObject::connect( vcd, SIGNAL(deleteContact(int)), this, SLOT(deleteContact(int) ));
 		QObject::connect( vcd, SIGNAL(callContact(int)), this, SLOT(callContact(int) ));
+        QObject::connect( vcd, SIGNAL(stopCall()), this, SLOT(stopCall() ));
+        vcd->setAttribute(Qt::WA_DeleteOnClose);
+        vcd->showMaximized();
     }
     updateScreen(REFRESH);
 
@@ -261,3 +279,26 @@ void PhoneBookDialog::on_deleteButton_clicked()
 	if (ret==QMessageBox::Yes) deleteContact(selection);
 }
 
+void PhoneBookDialog::loadPatterns(){
+    
+    QDir dir = QDir::home();
+    dir.cd("Documents");
+    dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    dir.setSorting(QDir::Name);
+
+
+    QFileInfoList list = dir.entryInfoList();
+    for (int i = 0; i < list.size(); ++i) {
+        QFileInfo fileInfo = list.at(i);
+        QString fileName = fileInfo.fileName();
+        qDebug() << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10)
+                                                .arg(fileInfo.fileName()));
+        if(fileName.endsWith(".vib")){
+            ringpattern->addPattern(fileName,RingPattern::VIB);
+        } 
+        else if (fileName.endsWith(".led")){
+            ringpattern->addPattern(fileName,RingPattern::LED);
+        }
+    }
+
+}
