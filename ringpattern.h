@@ -34,6 +34,8 @@ class RingPattern : public QObject
 		void setPattern(QString fileName, DeviceType type);
 		void startVibrate();
 		void stopVibrate();
+        bool isSynchronized();
+        void setSynchronized(bool sync);
         ~RingPattern();
 
     private:
@@ -44,8 +46,10 @@ class RingPattern : public QObject
 		VibLedThread * blueThread;
 		VibLedThread * orangeThread;
 		VibLedThread * redThread;
-		VibLedThread * vibThread;	
-};
+		VibLedThread * vibThread;
+        bool synchronized;
+        QValueSpaceObject * valueSpace;	
+};  
 
 #endif
 

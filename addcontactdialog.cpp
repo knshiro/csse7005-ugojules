@@ -113,21 +113,14 @@ void AddContactDialog::on_browsePushButton_clicked()
 
 void AddContactDialog::on_ringOptionComboBox_currentIndexChanged(int i){
 	
-	QColor colour; // you can use also QColor
-	QString fonttemplate = tr("<font color='%1'>%2</font>");
-	// ...
 	qDebug()<< "index:" << i;
 	if(i == 0) {
-		qDebug()<< "orchestra" << i;
-		colour = Qt::red;
 		ledPushButton->setEnabled(true);
 	}
 	else {
-		qDebug()<< "sync" << i;
-		colour = Qt::gray;
 		ledPushButton->setEnabled(false);
 	}
-	ledLabel->setText( fonttemplate.arg( colour.name(), ledLabel->text() ) );	
+		
 
 }
 
