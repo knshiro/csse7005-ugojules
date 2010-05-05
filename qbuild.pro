@@ -28,15 +28,17 @@ HEADERS=neophonebookentry.h \
 	selectcalldialog.h \
         phonebookdialog.h \
 	vibledthread.h \
+    playaudiothread.h \
 	ringpattern.h
 SOURCES=neophonebookentry.cpp \ 
         neophonebook.cpp \
-	viewcontactdialog.cpp \
+	    viewcontactdialog.cpp \
         addcontactdialog.cpp \
         phonebookdialog.cpp \
-	selectcalldialog.cpp \
-	vibledthread.cpp \
-	ringpattern.cpp \
+	    selectcalldialog.cpp \
+	    vibledthread.cpp \
+        playaudiothread.cpp \
+	    ringpattern.cpp \
         main.cpp
 
 # SXE information
