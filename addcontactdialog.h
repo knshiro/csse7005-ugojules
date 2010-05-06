@@ -23,6 +23,7 @@
 
 #include "neophonebookentry.h"
 #include "ui_addcontactform.h"
+#include "audiodialog.h"
 
 class AddContactDialog : public QWidget, public Ui_AddContactDialog
 {

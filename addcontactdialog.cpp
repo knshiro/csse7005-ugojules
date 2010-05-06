@@ -134,6 +134,7 @@ void AddContactDialog::on_ringTonePushButton_clicked(){
                  this, SLOT(setFile(QString)) );
     dialog->showMaximized();
 }
+
 void AddContactDialog::on_ledPushButton_clicked(){
 	browseState = LED;
 	SelectCallDialog *dialog = new SelectCallDialog(ledLabel->text(), ".led", "Pulse", "Random"); 
@@ -152,10 +153,12 @@ void AddContactDialog::on_vibrationPushButton_clicked(){
 }
 
 void AddContactDialog::setFile(QString filename) {
+    AudioDialog * ad;
 	switch(browseState){
 		case RINGTONE:
 			qDebug() << "Ringtone :" << filename << "selected";
-			
+			ad = new AudioDialog(filename);
+                        ad->showMaximized();
 			ringToneLabel->setText(filename);
 			break;
 		case LED:
