@@ -16,6 +16,8 @@ PlayAudioThread::PlayAudioThread(QString filename){
 
 PlayAudioThread::~PlayAudioThread(){
     stop();
+    delete audioOutput;
+    delete file;
 }
 
 bool PlayAudioThread::loadFile(QString filename){
