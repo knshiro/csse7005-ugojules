@@ -29,7 +29,7 @@ AudioDialog::AudioDialog(QString filename, QWidget *parent, Qt::WFlags f)
     qDebug()<<"ready to play"<<filename<<"duration:"<<duration;
     
     totalTime->setText(duration);
-    updatePosition(0);
+    updatePosition(0,true);
 
     slider->setMaximum(audioLength);
     connect(player,SIGNAL(currentSec(int)),this,SLOT(updatePosition(int)));
@@ -77,6 +77,14 @@ void AudioDialog::on_rewindButton_clicked(){
 
 void AudioDialog::on_forwardButton_clicked(){
 
+}
+
+void AudioDialog::on_slider_valueChanged(int value){
+    if(playing) return;
+    qDebug()<<"slider moved to"<<value;
+    player->setOffset(value);
+    elapsedTime->setText(timeToString(value));
+    remainingTime->setText(timeToString(audioLength-value));
 }
 
 void AudioDialog::updatePosition(int time, bool force){
