@@ -69,7 +69,7 @@ void PlayAudioThread::stop(){
 
 bool PlayAudioThread::setOffset(int _offset){
     qint64 bytesOffset = 0;
-    stop();
+    //stop();
 
     bytesOffset = _offset * (BYTESPERDS);
     if(file != NULL){
