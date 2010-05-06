@@ -23,6 +23,9 @@
 #include <QAudioOutput>
 #include <QThread>
 #include <QFile>
+#include <QtGlobal>
+#include <qtopiaapplication.h>
+#include <QString>
 
 /**
 *	@author Ugo Bataillard
@@ -33,19 +36,25 @@ class PlayAudioThread : public QThread
 {
 	Q_OBJECT
 	
+    public :
+        static const int FREQUENCY = 11025;
+        static const int CHANNELS = 1;
+        static const int BITSPERSAMPLE = 16;
+        static const int BYTESPERDS = (int) ((FREQUENCY/10.0) * CHANNELS * BITSPERSAMPLE/8) + ((int) ((FREQUENCY/10.0) * CHANNELS * BITSPERSAMPLE/8)) % 2;
+
 	public:
    		PlayAudioThread(QString filename = "");
 		~PlayAudioThread();
         
-        virtual void play(int offset = -1);
+        virtual bool play(int offset = -1);
         virtual void pauseResume();
         int getDuration();
         virtual void stop();
 
         virtual void run();
         
-        void loadFile(QString filename);
-        void setOffset(int offset);
+        bool loadFile(QString filename);
+        bool setOffset(int offset);
 
 	signals:
 	    void currentSec(int);
@@ -58,6 +67,7 @@ class PlayAudioThread : public QThread
 		QAudioOutput *audioOutput;
         QFile *file;
         int offset;
+        bool active;
 
 };
 
