@@ -15,37 +15,40 @@
 **
 ****************************************************************************/
 
-#ifndef SELECTCALLDIALOG_H
-#define SELECTCALLTDIALOG_H
+#ifndef AUDIODIALOG_H
+#define AUDIODIALOG_H
 
 #include <QtGui>
 #include <qtopiaapplication.h>
-#include <QContentFilter>
-#include <QStackedLayout>
-#include <QDocumentSelector>
-#include <QContent>
 
-#include "ui_selectcallform.h"
+#include "ui_audiodialogform.h"
+#include "playaudiothread.h"
 
-class SelectCallDialog : public QDialog , public Ui_SelectCallDialog{
-	
-	Q_OBJECT
+class AudioDialog : public QWidget, public Ui_AudioDialog
+{
+    Q_OBJECT
 
     public:
-		
-    SelectCallDialog( QString selected, QString extension, QString defaultName = "", QString randomName = "", QWidget *parent=0, Qt::WFlags f = 0 );
-    ~SelectCallDialog();
+        AudioDialog(QString filename, QWidget *parent=0, Qt::WFlags f = 0 );
+        ~AudioDialog();
 
     private:
-    QDir dir;
+        PlayAudioThread * player;
+        bool playing;
+        QString timeToString(int time);
+        void updatePlayButton();
+        int audioLength;
 
     private slots:
-	void on_selectPushButton_clicked();
-    void on_cancelPushButton_clicked();
+	void on_playButton_clicked();
+	void on_stopButton_clicked();
+	void on_rewindButton_clicked();
+	void on_forwardButton_clicked();
+        void updatePosition(int time,bool force=false);
+        void endReached();
 
     signals:
-    void fileSelected(QString filename);
-
+      
 };
 
 #endif

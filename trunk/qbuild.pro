@@ -20,7 +20,8 @@ QTOPIA*=audio
 FORMS  =viewcontactform.ui \
 	addcontactform.ui \
         selectcallform.ui \
-        phonebookform.ui
+        phonebookform.ui \
+	audiodialogform.ui
 HEADERS=neophonebookentry.h \
         neophonebook.h \
 	viewcontactdialog.h \
@@ -28,7 +29,9 @@ HEADERS=neophonebookentry.h \
 	selectcalldialog.h \
         phonebookdialog.h \
 	vibledthread.h \
-    playaudiothread.h \
+	audiodialog.h \
+        playaudiothread.h \
+        custompushbutton.h \
 	ringpattern.h
 SOURCES=neophonebookentry.cpp \ 
         neophonebook.cpp \
@@ -39,6 +42,8 @@ SOURCES=neophonebookentry.cpp \
 	    vibledthread.cpp \
         playaudiothread.cpp \
 	    ringpattern.cpp \
+        audiodialog.cpp \
+        custompushbutton.cpp \
         main.cpp
 
 # SXE information

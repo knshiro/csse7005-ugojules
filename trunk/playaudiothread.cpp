@@ -51,7 +51,9 @@ void PlayAudioThread::run(){
     while (active && !file->atEnd()){
         len = file->read(buffer,BYTESPERDS);
         audioOutput->write( buffer,  len );
+        qDebug()<<">currentSec"<<file->pos() / BYTESPERDS;
         emit currentSec(file->pos() / BYTESPERDS);
+        qDebug()<<"<currentSec"<<file->pos() / BYTESPERDS;
     }
     active = false;
     qDebug() << "<<Audio thread return";
