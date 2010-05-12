@@ -23,6 +23,7 @@
 #include "addcontactdialog.h"
 #include "ringpattern.h"
 #include "playaudiothread.h"
+#include "accelthread.h"
 #include <QtGui>
 
 
@@ -52,6 +53,7 @@ class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
 		void on_downButton_clicked();
 		void on_selectButton_clicked();
 		void on_deleteButton_clicked();
+		void facingUp(bool up);
 
     private:
         int selection;
@@ -59,6 +61,10 @@ class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
 		QList<QLabel*> contactSlots;
 		RingPattern *ringpattern;
 		PlayAudioThread * audioThread;
+		AccelThread * accelThread;
+		int orientationState;
+		QTime timer;
+
 };
 
 #endif

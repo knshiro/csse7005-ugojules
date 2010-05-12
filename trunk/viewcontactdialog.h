@@ -43,7 +43,6 @@ class ViewContactDialog : public QWidget, public Ui_ViewContactDialog
 	PhoneBookDialog* phoneBookDialog;
 	int indexEntry;
 
-    
     signals:
 	void deleteContact(int index);
 	void callContact(int index);
