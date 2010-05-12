@@ -15,6 +15,7 @@ AccelThread::AccelThread(){
     } else {
         qDebug() << "<< File" << file->fileName() << "loaded";
     }
+    side = true;
     
 }
 
@@ -27,13 +28,17 @@ void AccelThread::run(){
     active = true;
     struct input_event ev;
     while (active) {
-        if (blockingRead(file,(char *) &ev, sizeof(struct input_event))){
+        if ( blockingRead(file,(char *) &ev, sizeof(struct input_event)) != sizeof(struct input_event)){
             perror("Error reading");
         }
         else {
-            qDebug("type:%u code:%u value:%d\n", ev.type, ev.code, ev.value);
+            if ( ev.code == 2) {
+                qDebug("type:%u code:%u value:%d\n", ev.type, ev.code, ev.value);
+                side = ev.value >0;
+                emit facingUp(side); 
+            }
         }
-        msleep(100);
+        //msleep(100);
     }
 }
 
