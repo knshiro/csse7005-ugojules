@@ -22,6 +22,7 @@
 #include "neophonebook.h"
 #include "addcontactdialog.h"
 #include "ringpattern.h"
+#include "playaudiothread.h"
 #include <QtGui>
 
 
@@ -57,6 +58,7 @@ class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
         QList<int> slotIndex;
 		QList<QLabel*> contactSlots;
 		RingPattern *ringpattern;
+		PlayAudioThread * audioThread;
 };
 
 #endif
