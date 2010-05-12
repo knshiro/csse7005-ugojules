@@ -86,12 +86,13 @@ void NeoPhoneBook::loadPhoneBook()
         line = line.replace("\n","").replace("\r","");
         QStringList fields = line.split("|");
 	NeoPhoneBookEntry * newEntry = new NeoPhoneBookEntry(fields.at(0),fields.at(1),fields.at(2),fields.at(3),
-		fields.at(4),fields.at(5),fields.at(6),fields.at(7).toInt());
+		fields.at(4),fields.at(5),fields.at(6),fields.at(7).toInt(),fields.at(8).toInt());
 	if(fields.at(4).compare("")==0) newEntry->setRingTone("Default");
 	if(fields.at(5).compare("")==0) newEntry->setVibrationPattern("Pulse");
 	if(fields.at(6).compare("")==0) newEntry->setLedPattern("Pulse");
 	if(fields.at(7).compare("")==0) newEntry->setRingOption(0);
-	
+	if(fields.at(8).compare("")==0) newEntry->setRingOffset(0);
+
 	int i = findIndex(newEntry->getContactName());
     	phoneList.insert(i,newEntry);
     }
@@ -108,7 +109,7 @@ void NeoPhoneBook::savePhoneBook()
        return;
     for(int i=0;i<phoneList.size();i++){
       entry = *phoneList.at(i);
-      QString line = entry.getContactName() + "|" + entry.getPhoneNumber() + "|" + entry.getContactEmail() + "|" + entry.getPictureFilePath()+"|"+entry.getRingtone()+"|"+entry.getVibrationPattern()+"|"+entry.getLedPattern()+"|"+ entry.getRingOption()+"\n";
+      QString line = entry.getContactName() + "|" + entry.getPhoneNumber() + "|" + entry.getContactEmail() + "|" + entry.getPictureFilePath()+"|"+entry.getRingtone()+"|"+entry.getVibrationPattern()+"|"+entry.getLedPattern()+"|"+ entry.getRingOption()+"|"+ entry.getRingOffset()+"\n";
       qDebug()<<"Saving entry" <<line;
       QByteArray bytes = line.toAscii();
       file.write(bytes);

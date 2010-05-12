@@ -27,7 +27,7 @@ class NeoPhoneBookEntry
         NeoPhoneBookEntry();
         //NeoPhoneBookEntry(QString name, QString number);
         NeoPhoneBookEntry(QString name, QString number, QString contactEmail = "", QString path = "", 
-		QString tone="Default", QString vpattern="Pulse", QString lpattern = "Pulse", int option = 0);
+		QString tone="Default", QString vpattern="Pulse", QString lpattern = "Pulse", int option = 0,int offset = 0);
         QString getContactName();
         QString getPhoneNumber();
         QString getContactEmail();
@@ -36,6 +36,8 @@ class NeoPhoneBookEntry
 	QString getVibrationPattern();
 	QString getLedPattern();
 	int getRingOption();
+        int getRingOffset();
+
         void setContactName(QString name);
         void setPhoneNumber(QString number);
         void setContactEmail(QString email);
@@ -44,6 +46,8 @@ class NeoPhoneBookEntry
 	void setVibrationPattern(QString vpattern);
 	void setLedPattern(QString lpattern);
 	void setRingOption(int option);
+        void setRingOffset(int offset);
+
 
         ~NeoPhoneBookEntry();
 
@@ -55,7 +59,8 @@ class NeoPhoneBookEntry
 	QString ringtone;
 	QString vibrationPattern;
 	QString ledPattern;
-	int ringOption;
+		int ringOption;
+		int ringOffset;
 };
 
 #endif
