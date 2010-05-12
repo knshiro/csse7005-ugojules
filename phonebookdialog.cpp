@@ -187,7 +187,8 @@ void PhoneBookDialog::stopCall(){
 }
 
 void PhoneBookDialog::callContact(int index){
-	
+	accelThread->start();
+
     NeoPhoneBookEntry* contact = myPhoneBook->getElementAt(index);
 	
     qDebug() << "Vibration pattern :" << contact->getVibrationPattern();
@@ -201,13 +202,15 @@ void PhoneBookDialog::callContact(int index){
 	audioThread->loadFile(contact->getRingtone());
 	audioThread->setOffset(contact->getRingOffset());
 	
+
 	orientationState=0;
-	accelThread->start();	
 
 	// start the show !
 	if(accelThread->isFacingUp())
 		audioThread->play();
 	ringpattern->startVibrate();
+
+	orientationState=0;
 
 /*
 	// pour pulse :
