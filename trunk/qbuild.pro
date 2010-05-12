@@ -27,6 +27,7 @@ HEADERS=neophonebookentry.h \
 	viewcontactdialog.h \
         addcontactdialog.h \
 	selectcalldialog.h \
+        accelthread.h \
         phonebookdialog.h \
 	vibledthread.h \
 	audiodialog.h \
@@ -39,6 +40,7 @@ SOURCES=neophonebookentry.cpp \
         addcontactdialog.cpp \
         phonebookdialog.cpp \
 	    selectcalldialog.cpp \
+        accelthread.cpp \
 	    vibledthread.cpp \
         playaudiothread.cpp \
 	    ringpattern.cpp \
