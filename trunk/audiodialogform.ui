@@ -93,7 +93,7 @@
         <string/>
        </property>
        <property name="icon" >
-        <iconset>Documents/icons/backward.png</iconset>
+        <iconset>icons/backward.png</iconset>
        </property>
       </widget>
      </item>
@@ -109,7 +109,7 @@
         <string/>
        </property>
        <property name="icon" >
-        <iconset>Documents/icons/play.png</iconset>
+        <iconset>icons/play.png</iconset>
        </property>
       </widget>
      </item>
@@ -125,7 +125,7 @@
         <string/>
        </property>
        <property name="icon" >
-        <iconset>Documents/icons/stop.png</iconset>
+        <iconset>icons/stop.png</iconset>
        </property>
       </widget>
      </item>
@@ -141,7 +141,7 @@
         <string/>
        </property>
        <property name="icon" >
-        <iconset>Documents/icons/forward.png</iconset>
+        <iconset>icons/forward.png</iconset>
        </property>
       </widget>
      </item>

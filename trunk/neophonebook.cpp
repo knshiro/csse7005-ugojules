@@ -20,7 +20,7 @@
 
 NeoPhoneBook::NeoPhoneBook()
 {
-	fileName = "/home/root/Applications/CSSE4003/Documents/phonebook";
+	//fileName = "/home/root/Applications/CSSE4003/Documents/phonebook";
     // Use this path for QVFB
     //fileName = "/home/user/csse7005-ugojules/Documents/phonebook";
 
@@ -28,7 +28,7 @@ NeoPhoneBook::NeoPhoneBook()
     //fileName = "/media/KINGSTON/csse7005/project/csse7005-ugojules/Documents/phonebook";
     
     // Use this path for NEO 
-    //fileName = "/home/root/Documents/phonebook";
+    fileName = "/home/root/Documents/phonebook";
 }
 
 void NeoPhoneBook::addEntry(NeoPhoneBookEntry *newEntry)

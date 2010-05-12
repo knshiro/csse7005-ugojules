@@ -45,6 +45,8 @@ class AudioDialog : public QWidget, public Ui_AudioDialog
 	void on_rewindButton_clicked();
 	void on_forwardButton_clicked();
         void on_slider_valueChanged(int value);
+        void on_slider_sliderPressed();
+        void on_slider_sliderReleased();
         void updatePosition(int time,bool force=false);
         void endReached();
 
