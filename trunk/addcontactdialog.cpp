@@ -26,6 +26,7 @@ AddContactDialog::AddContactDialog(QWidget *parent, Qt::WFlags f)
     // initialize the dialog
     setupUi(this);
     editEntry = NULL;
+    ringOffset = 0;
 
 }
 
@@ -47,6 +48,7 @@ void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
     vibrationLabel->setText(entryToEdit->getVibrationPattern());
     ledLabel->setText(entryToEdit->getLedPattern());
     ringOptionComboBox->setCurrentIndex(entryToEdit->getRingOption());
+    setRingOffset(entryToEdit->getRingOffset());
     qDebug() << "Filename :" << entryToEdit->getPictureFilePath();
     if(entryToEdit->getPictureFilePath() != ""){
       picture = QPixmap(entryToEdit->getPictureFilePath());
@@ -70,10 +72,11 @@ void AddContactDialog::on_savePushButton_clicked()
             editEntry->setVibrationPattern(vibrationLabel->text());
             editEntry->setLedPattern(ledLabel->text());
             editEntry->setRingOption(ringOptionComboBox->currentIndex ());
+            editEntry->setRingOffset(ringOffset);
             emit editContact(editEntry);
         }
         else {
-	        NeoPhoneBookEntry *newEntry = new NeoPhoneBookEntry(nameLineEdit->text(), numberLineEdit->text(), emailLineEdit->text(),pictureFilePath, ringToneLabel->text(), vibrationLabel->text(), ledLabel->text(), ringOptionComboBox->currentIndex());
+	        NeoPhoneBookEntry *newEntry = new NeoPhoneBookEntry(nameLineEdit->text(), numberLineEdit->text(), emailLineEdit->text(),pictureFilePath, ringToneLabel->text(), vibrationLabel->text(), ledLabel->text(), ringOptionComboBox->currentIndex(), ringOffset);
             emit addContact(newEntry);
         }
     }
@@ -159,6 +162,7 @@ void AddContactDialog::setFile(QString filename) {
 			qDebug() << "Ringtone :" << filename << "selected";
 			ad = new AudioDialog(filename);
                         ad->showMaximized();
+            connect(ad, SIGNAL(saveOffset(int)), this, SLOT(setOffset(int)));
 			ringToneLabel->setText(filename);
 			break;
 		case LED:
@@ -172,4 +176,8 @@ void AddContactDialog::setFile(QString filename) {
 		default:
 			;
 	}
+}
+
+void AddContactDialog::setRingOffset(int offset){
+    ringOffset = offset;
 }

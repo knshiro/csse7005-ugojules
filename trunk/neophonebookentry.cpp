@@ -27,6 +27,7 @@ NeoPhoneBookEntry::NeoPhoneBookEntry()
     vibrationPattern = "Pulse";
     ledPattern = "Pulse";
     ringOption = 0;
+    ringOffset = 0;
 }
 
 NeoPhoneBookEntry::NeoPhoneBookEntry(QString name, QString number, QString email, QString path, 

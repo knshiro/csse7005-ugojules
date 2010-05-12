@@ -40,17 +40,20 @@ class AudioDialog : public QWidget, public Ui_AudioDialog
         int audioLength;
 
     private slots:
-	void on_playButton_clicked();
-	void on_stopButton_clicked();
-	void on_rewindButton_clicked();
-	void on_forwardButton_clicked();
+	    void on_playButton_clicked();
+	    void on_stopButton_clicked();
+	    void on_rewindButton_clicked();
+	    void on_forwardButton_clicked();
         void on_slider_valueChanged(int value);
         void on_slider_sliderPressed();
         void on_slider_sliderReleased();
         void updatePosition(int time,bool force=false);
         void endReached();
+        void on_saveButton_clicked();
+        void on_cancelButton_clicked();
 
     signals:
+        void saveOffset(int);
       
 };
 

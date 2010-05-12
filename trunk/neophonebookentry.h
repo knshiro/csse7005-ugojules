@@ -32,20 +32,20 @@ class NeoPhoneBookEntry
         QString getPhoneNumber();
         QString getContactEmail();
         QString getPictureFilePath();
-	QString getRingtone();
-	QString getVibrationPattern();
-	QString getLedPattern();
-	int getRingOption();
+	    QString getRingtone();
+	    QString getVibrationPattern();
+	    QString getLedPattern();
+	    int getRingOption();
         int getRingOffset();
 
         void setContactName(QString name);
         void setPhoneNumber(QString number);
         void setContactEmail(QString email);
         void setPictureFilePath(QString path);
-	void setRingTone(QString tone);
-	void setVibrationPattern(QString vpattern);
-	void setLedPattern(QString lpattern);
-	void setRingOption(int option);
+	    void setRingTone(QString tone);
+	    void setVibrationPattern(QString vpattern);
+	    void setLedPattern(QString lpattern);
+	    void setRingOption(int option);
         void setRingOffset(int offset);
 
 
