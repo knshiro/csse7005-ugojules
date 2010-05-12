@@ -22,6 +22,8 @@ PlayAudioThread::~PlayAudioThread(){
 
 bool PlayAudioThread::loadFile(QString filename){
     qDebug() << ">> Load file" << filename;
+    
+    stop();
 
     if(filename.startsWith("/")){
         file = new QFile(filename);
@@ -55,7 +57,10 @@ void PlayAudioThread::run(){
         emit currentSec(file->pos() / BYTESPERDS);
         qDebug()<<"<currentSec"<<file->pos() / BYTESPERDS;
     }
-    active = false;
+    if(file->atEnd()){
+        active = false;
+        emit endReached();
+    }
     qDebug() << "<<Audio thread return";
 }
 

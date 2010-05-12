@@ -144,7 +144,20 @@ void AudioDialog::endReached(){
 	slider->setSliderPosition(0);
 }
 
+void AudioDialog::on_saveButton_clicked(){
+
+    emit saveOffset(player->getOffset());
+    close();
+
+}
+void AudioDialog::on_cancelButton_clicked(){
+
+    close();
+
+}
+
 AudioDialog::~AudioDialog()
 {
     // Do nothing
+    delete player;
 }

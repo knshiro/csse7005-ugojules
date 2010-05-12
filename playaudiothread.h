@@ -41,7 +41,7 @@ class PlayAudioThread : public QThread
 
 	signals:
 	    void currentSec(int);
-        void playEnded();
+        void endReached();
 
 	private slots:
 		

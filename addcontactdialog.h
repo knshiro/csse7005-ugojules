@@ -30,9 +30,9 @@ class AddContactDialog : public QWidget, public Ui_AddContactDialog
     Q_OBJECT
 
     public:
-	enum Browse_Type { RINGTONE, VIBRATION, LED};
+	    enum Browse_Type { RINGTONE, VIBRATION, LED};
 	
-	Browse_Type browseState;
+	    Browse_Type browseState;
 	
         AddContactDialog( QWidget *parent=0, Qt::WFlags f = 0 );
         void setupEdit(NeoPhoneBookEntry *entryToEdit);
@@ -40,19 +40,21 @@ class AddContactDialog : public QWidget, public Ui_AddContactDialog
 
     private:
         QString pictureFilePath;
-	NeoPhoneBookEntry *editEntry;
+        int ringOffset;
+	    NeoPhoneBookEntry *editEntry;
 
 
     private slots:
-	void on_savePushButton_clicked();
-	void on_cancelPushButton_clicked();
-	void on_browsePushButton_clicked();
-	void on_removePushButton_clicked();
-	void on_ringOptionComboBox_currentIndexChanged(int i);
-	void on_ringTonePushButton_clicked();
-	void on_ledPushButton_clicked();
-	void on_vibrationPushButton_clicked();
-	void setFile(QString filename);
+	    void on_savePushButton_clicked();
+	    void on_cancelPushButton_clicked();
+	    void on_browsePushButton_clicked();
+	    void on_removePushButton_clicked();
+	    void on_ringOptionComboBox_currentIndexChanged(int i);
+	    void on_ringTonePushButton_clicked();
+	    void on_ledPushButton_clicked();
+	    void on_vibrationPushButton_clicked();
+	    void setFile(QString filename);
+        void setRingOffset(int offset);
 
     signals:
       void editContact(NeoPhoneBookEntry *editEntry);
