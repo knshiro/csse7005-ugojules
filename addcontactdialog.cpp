@@ -73,6 +73,7 @@ void AddContactDialog::on_savePushButton_clicked()
             editEntry->setLedPattern(ledLabel->text());
             editEntry->setRingOption(ringOptionComboBox->currentIndex ());
             editEntry->setRingOffset(ringOffset);
+            qDebug() << ">>Set ring offset :" << editEntry->getRingOffset();
             emit editContact(editEntry);
         }
         else {
@@ -162,7 +163,8 @@ void AddContactDialog::setFile(QString filename) {
 			qDebug() << "Ringtone :" << filename << "selected";
 			ad = new AudioDialog(filename);
                         ad->showMaximized();
-            connect(ad, SIGNAL(saveOffset(int)), this, SLOT(setOffset(int)));
+            ad->setAttribute(Qt::WA_DeleteOnClose);
+            connect(ad, SIGNAL(saveOffset(int)), this, SLOT(setRingOffset(int)));
 			ringToneLabel->setText(filename);
 			break;
 		case LED:
@@ -179,5 +181,6 @@ void AddContactDialog::setFile(QString filename) {
 }
 
 void AddContactDialog::setRingOffset(int offset){
+    qDebug() << "Saving offset :" << offset << "dsec";
     ringOffset = offset;
 }
