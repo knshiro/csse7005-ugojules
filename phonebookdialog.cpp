@@ -35,7 +35,8 @@ PhoneBookDialog::PhoneBookDialog(QWidget *parent, Qt::WFlags f)
 	qDebug()<<"passe append";
     myPhoneBook = new NeoPhoneBook();
 	ringpattern = new RingPattern();
-    qDebug()<<"instanciated phonebook and ringpattern";
+	audioThread = new PlayAudioThread();
+    qDebug()<<"instanciated phonebook ringpattern and playaudiothread";
 	myPhoneBook->loadPhoneBook();
 	qDebug()<<"phonebook loaded";
     selection = 0;
@@ -178,13 +179,13 @@ void PhoneBookDialog::deleteContact(int index)
 }
 
 void PhoneBookDialog::stopCall(){
+	audioThread->stop();
     ringpattern->stopVibrate();
 }
 
 void PhoneBookDialog::callContact(int index){
 	
     NeoPhoneBookEntry* contact = myPhoneBook->getElementAt(index);
-    // pour un file (faudrait peut etre faire addPattern a un autre moment...)
 	
     qDebug() << "Vibration pattern :" << contact->getVibrationPattern();
     ringpattern->setPattern(contact->getVibrationPattern(),RingPattern::VIB);
@@ -192,6 +193,13 @@ void PhoneBookDialog::callContact(int index){
     ringpattern->setPattern(contact->getLedPattern(),RingPattern::LED);
     ringpattern->setSynchronized( contact->getRingOption() == 1);
 
+	// safe
+	audioThread->stop();
+	audioThread->loadFile(contact->getRingtone());
+	audioThread->setOffset(contact->getRingOffset());
+
+	// start the show !
+	audioThread->play();
 	ringpattern->startVibrate();
 
 /*
