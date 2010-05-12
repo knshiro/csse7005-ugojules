@@ -52,7 +52,7 @@ void AudioDialog::on_playButton_clicked(){
 
 void AudioDialog::updatePlayButton(){
     QDir dir = QDir::home();
-    dir.cd("Documents/icons");
+    dir.cd("Applications/CSSE4003/icons");
     if(playing){
         playButton->setIcon(QIcon(dir.filePath("pause.png")));
     }
@@ -72,20 +72,47 @@ void AudioDialog::on_stopButton_clicked(){
 }
 
 void AudioDialog::on_rewindButton_clicked(){
-
+	if(playing) player->stop();
+	int newOffset = player->getOffset() - audioLength/10;
+	if(newOffset<0) newOffset=0;
+	qDebug() << "rewind pressed, old offset:" << player->getOffset() << "new offset:" << newOffset;
+	slider->setSliderDown(true);
+	slider->setSliderPosition(newOffset);
+	slider->setSliderDown(false);
+	if(playing) player->play();
 }
 
 void AudioDialog::on_forwardButton_clicked(){
-
+	if(playing) player->stop();
+	int newOffset = player->getOffset() + audioLength/10;
+	qDebug() << "rewind pressed, old offset:" << player->getOffset() << "new offset:" << newOffset;
+	if(newOffset>=audioLength){
+		endReached();
+		return;
+	}
+	slider->setSliderDown(true);
+	slider->setSliderPosition(newOffset);
+	slider->setSliderDown(false);
+	if(playing) player->play();
 }
 
 void AudioDialog::on_slider_valueChanged(int value){
-    if(playing) return;
+    if(playing && !slider->isSliderDown()) return;
     qDebug()<<"slider moved to"<<value;
     player->setOffset(value);
     elapsedTime->setText(timeToString(value));
     remainingTime->setText(timeToString(audioLength-value));
 }
+
+void AudioDialog::on_slider_sliderPressed(){
+	if(playing) player->stop();
+}
+
+void AudioDialog::on_slider_sliderReleased(){
+	if(playing) player->play();
+}
+
+
 
 void AudioDialog::updatePosition(int time, bool force){
     qDebug()<<"updatePosition"<<time;
@@ -114,6 +141,7 @@ void AudioDialog::endReached(){
     playing=false;
     updatePlayButton();
     player->setOffset(0);
+	slider->setSliderPosition(0);
 }
 
 AudioDialog::~AudioDialog()

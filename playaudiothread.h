@@ -36,6 +36,8 @@ class PlayAudioThread : public QThread
         
         bool loadFile(QString filename);
         bool setOffset(int offset);
+        int getOffset();
+
 
 	signals:
 	    void currentSec(int);

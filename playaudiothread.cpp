@@ -80,6 +80,10 @@ bool PlayAudioThread::setOffset(int _offset){
     }
 }
 
+int PlayAudioThread::getOffset(){
+	return file->pos() / BYTESPERDS;
+}
+
 bool PlayAudioThread::play(int offset){
     qDebug() << ">>Play";
     stop();
