@@ -33,6 +33,7 @@ AudioDialog::AudioDialog(QString filename, QWidget *parent, Qt::WFlags f)
 
     slider->setMaximum(audioLength);
     connect(player,SIGNAL(currentSec(int)),this,SLOT(updatePosition(int)));
+    connect(player,SIGNAL(endReached()),this,SLOT(endReached()));
 
 }
 
