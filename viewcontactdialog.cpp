@@ -55,10 +55,12 @@ void ViewContactDialog::on_editButton_clicked(){
     
 	QObject::connect( myAddContactDialog, SIGNAL(addContact(NeoPhoneBookEntry *)), phoneBookDialog, SLOT(addContact(NeoPhoneBookEntry *) ));
 	QObject::connect( myAddContactDialog, SIGNAL(editContact(NeoPhoneBookEntry *)), phoneBookDialog, SLOT(replaceContact(NeoPhoneBookEntry *) ));
+    emit stopCall();
 	close();
 }
 
 void ViewContactDialog::on_deleteButton_clicked(){
+    emit stopCall();
 	// prompt user to be able to delete the selected contact
 	if(indexEntry==-1) return;
 	qDebug() << "deleting ?: " << QString::number(indexEntry);
