@@ -27,6 +27,9 @@ AccelThread::~AccelThread(){
 void AccelThread::run(){
     active = true;
     struct input_event ev;
+    QList<int> measures;
+    int32_t sum = 0;
+    measures << 1 << 1 << 1 << 1 << 1;
     while (active) {
         if ( blockingRead(file,(char *) &ev, sizeof(struct input_event)) != sizeof(struct input_event)){
             perror("Error reading");
@@ -34,7 +37,13 @@ void AccelThread::run(){
         else {
             if ( ev.code == 2) {
                 qDebug("type:%u code:%u value:%d\n", ev.type, ev.code, ev.value);
-                side = ev.value >0;
+                measures.removeFirst();
+                measures.append(ev.value);
+                sum = 0;
+                for(int i = 0; i<measures.size(); i++){
+                    sum += measures.at(i);
+                }
+                side = sum >0;
                 emit facingUp(side); 
             }
         }
