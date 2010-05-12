@@ -24,6 +24,7 @@ bool PlayAudioThread::loadFile(QString filename){
     qDebug() << ">> Load file" << filename;
     
     stop();
+    delete file;
 
     if(filename.startsWith("/")){
         file = new QFile(filename);

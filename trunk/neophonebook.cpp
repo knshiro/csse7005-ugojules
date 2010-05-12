@@ -109,7 +109,11 @@ void NeoPhoneBook::savePhoneBook()
        return;
     for(int i=0;i<phoneList.size();i++){
       entry = *phoneList.at(i);
-      QString line = entry.getContactName() + "|" + entry.getPhoneNumber() + "|" + entry.getContactEmail() + "|" + entry.getPictureFilePath()+"|"+entry.getRingtone()+"|"+entry.getVibrationPattern()+"|"+entry.getLedPattern()+"|"+ entry.getRingOption()+"|"+ entry.getRingOffset()+"\n";
+      QString line = entry.getContactName() + "|" + entry.getPhoneNumber() + "|" + entry.getContactEmail() + "|" + entry.getPictureFilePath()+"|"+entry.getRingtone()+"|"+entry.getVibrationPattern()+"|"+entry.getLedPattern()+"|";
+      line.append(QString::number(entry.getRingOption()));
+      line.append("|");
+      line.append(QString::number(entry.getRingOffset()));
+      line.append("\n");
       qDebug()<<"Saving entry" <<line;
       QByteArray bytes = line.toAscii();
       file.write(bytes);
