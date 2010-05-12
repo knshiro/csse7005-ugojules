@@ -9,6 +9,12 @@ struct input_event {
 
 AccelThread::AccelThread(){
     file = new QFile("/dev/input/event3");
+
+    if (!file->open(QIODevice::ReadOnly)){
+        qDebug() << "Cannot open the file" << file->fileName();
+    } else {
+        qDebug() << "<< File" << file->fileName() << "loaded";
+    }
     
 }
 
@@ -26,7 +32,8 @@ void AccelThread::run(){
         }
         else {
             qDebug("type:%u code:%u value:%d\n", ev.type, ev.code, ev.value);
-        } 
+        }
+        msleep(100);
     }
 }
 
@@ -51,4 +58,8 @@ int AccelThread::blockingRead(QFile * file, char * buffer, int count)
 
 void AccelThread::stop(){
     active = false;
+}
+
+bool AccelThread::isFacingUp(){
+    return side;
 }
