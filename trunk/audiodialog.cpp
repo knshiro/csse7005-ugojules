@@ -51,13 +51,11 @@ void AudioDialog::on_playButton_clicked(){
 }
 
 void AudioDialog::updatePlayButton(){
-    QDir dir = QDir::home();
-    dir.cd("Applications/CSSE4003/icons");
     if(playing){
-        playButton->setIcon(QIcon(dir.filePath("pause.png")));
+        playButton->setIcon(QIcon("icons/pause.png"));
     }
     else {
-        playButton->setIcon(QIcon(dir.filePath("play.png")));
+        playButton->setIcon(QIcon("icons/play.png"));
     }
 }
 
