@@ -27,7 +27,7 @@ AudioDialog::AudioDialog(QString filename, QWidget *parent, Qt::WFlags f)
     audioLength = player->getDuration();
     QString duration = timeToString(audioLength);
     qDebug()<<"ready to play"<<filename<<"duration:"<<duration;
-    
+    labelFileName->setText(filename);
     totalTime->setText(duration);
     updatePosition(0,true);
 

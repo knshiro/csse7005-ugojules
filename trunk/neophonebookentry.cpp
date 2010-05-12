@@ -30,7 +30,7 @@ NeoPhoneBookEntry::NeoPhoneBookEntry()
 }
 
 NeoPhoneBookEntry::NeoPhoneBookEntry(QString name, QString number, QString email, QString path, 
-	QString tone, QString vpattern, QString lpattern, int option)
+	QString tone, QString vpattern, QString lpattern, int option, int offset)
 {
     contactName = name;
     phoneNumber = number;
@@ -40,6 +40,7 @@ NeoPhoneBookEntry::NeoPhoneBookEntry(QString name, QString number, QString email
     vibrationPattern = vpattern;
     ledPattern = lpattern;
     ringOption = option;
+	ringOffset = offset;
 }
 
 
@@ -84,6 +85,11 @@ int NeoPhoneBookEntry::getRingOption()
     return ringOption;
 }
 
+int NeoPhoneBookEntry::getRingOffset()
+{
+    return ringOffset;
+}
+
 void NeoPhoneBookEntry::setContactName(QString name)
 {
     contactName = name;
@@ -124,6 +130,10 @@ void NeoPhoneBookEntry::setRingOption(int option)
     ringOption = option;
 }
 
+void NeoPhoneBookEntry::setRingOffset(int offset)
+{
+    ringOffset = offset;
+}
 
 NeoPhoneBookEntry::~NeoPhoneBookEntry()
 {
