@@ -161,11 +161,15 @@ void AddContactDialog::setFile(QString filename) {
 	switch(browseState){
 		case RINGTONE:
 			qDebug() << "Ringtone :" << filename << "selected";
+            if(filename == "Default"){
+                filename = "Default.aud";
+            }
 			ad = new AudioDialog(filename);
                         ad->showMaximized();
             ad->setAttribute(Qt::WA_DeleteOnClose);
             connect(ad, SIGNAL(saveOffset(int)), this, SLOT(setRingOffset(int)));
-			ringToneLabel->setText(filename);
+			
+            ringToneLabel->setText(filename);
 			break;
 		case LED:
 			qDebug() << "LED :" << filename << "selected";
