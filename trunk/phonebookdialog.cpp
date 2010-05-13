@@ -211,15 +211,19 @@ void PhoneBookDialog::callContact(int index){
 	audioThread->setOffset(contact->getRingOffset());
 	
 
-	orientationState=0;
+	
 
 	// start the show !
-	if(accelThread->isFacingUp())
+	if(accelThread->isFacingUp()){
+        orientationState=0;
 		audioThread->play();
+    }
+    else {
+        orientationState=1;
+    }
 	ringpattern->startVibrate();
     
     outputRunning=2;
-	orientationState=0;
 
 /*
 	// pour pulse :
@@ -237,47 +241,25 @@ void PhoneBookDialog::callContact(int index){
 }
 
 void PhoneBookDialog::facingUp(bool up){
-	int newOffset;
 	switch(orientationState){
-	case 0: // initial state, phone assumed facing up
+	case 0: // phone started facing up
 		if(up)  // nothing changed
 			break;
-		// phone has been turned down, stop playback
-		orientationState=1;
-		audioThread->stop();
-		// keep track of time to simulate silent playback of the song
-		timer.start();
+		// phone has been turned down, hangup
+		stopCall();
 		break;
 	case 1: // phone is facing down
 		if(!up) // nothing changed
 			break;
 		// phone has been turned up
 		orientationState=2;
-		// change position in song according to time spend silenced
-		newOffset = audioThread->getOffset() + timer.elapsed()/100;
-		// if song not finished, restart it
-		if(newOffset<audioThread->getDuration()){
-			audioThread->setOffset(newOffset);
-			audioThread->start();
-		}
-		// start timer
-		timer.start();
 		break;
-	case 2: // phone has been facing down then facing up
+	case 2: // phone started facing down then facing up
 		if(up)  // nothing changed
 			break;
 		// phone has been turned down
-		// check time elapsed
-		if(timer.elapsed()<2000){
-				// hang up
-				stopCall();
-		} else {
-			// phone is facing down after 2sec were elapsed
-			orientationState=1;
-			audioThread->stop();
-			// keep track of time to simulate silent playback of the song
-			timer.start();
-		}
+		// hang up
+		stopCall();
 		break;
 	default: break;
 	}

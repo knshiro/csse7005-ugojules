@@ -25,7 +25,27 @@ void AccelThread::run(){
     struct input_event ev;
     QList<int> measures;
     int32_t sum = 0;
-    measures << 1 << 1 << 1 << 1 << 1;
+    if (!file->open(QIODevice::ReadOnly)){
+        qDebug() << "AccelThread: Cannot open the file" << file->fileName();
+        return;
+    }
+    for(int i=0;i<5;i++){
+        ev.code = -1;
+        while (ev.code != 2){
+            if ( blockingRead(file,(char *) &ev, sizeof(struct input_event)) != sizeof(struct input_event)){
+                perror("AccelThread: Error reading");
+                return;
+            }
+        }    
+        sum = 0;
+        for(int i = 0; i<measures.size(); i++){
+            sum += measures.at(i);
+        }
+        side = sum >0;
+        qDebug("AccelThread: type:%u code:%u value:%d\n", ev.type, ev.code, ev.value); 
+        measures.append(ev.value);
+    }
+    file->close();
     while (active) {
         if (!file->open(QIODevice::ReadOnly)){
         	qDebug() << "AccelThread: Cannot open the file" << file->fileName();
@@ -35,21 +55,18 @@ void AccelThread::run(){
 	    while (ev.code != 2){
 	        if ( blockingRead(file,(char *) &ev, sizeof(struct input_event)) != sizeof(struct input_event)){
                 perror("AccelThread: Error reading");
-            }
-            else {
-                if ( ev.code == 2) {
-                    qDebug("AccelThread: type:%u code:%u value:%d\n", ev.type, ev.code, ev.value); 
-                    measures.removeFirst();
-                    measures.append(ev.value);
-                    sum = 0;
-                    for(int i = 0; i<measures.size(); i++){
-                        sum += measures.at(i);
-                    }
-                    side = sum >0;
-                    emit facingUp(side); 
-                }
+                return;
             }
         }
+        qDebug("AccelThread: type:%u code:%u value:%d\n", ev.type, ev.code, ev.value); 
+        measures.removeFirst();
+        measures.append(ev.value);
+        sum = 0;
+        for(int i = 0; i<measures.size(); i++){
+            sum += measures.at(i);
+        }
+        side = sum >0;
+        emit facingUp(side); 
 	    file->close();
         msleep(50);
     }
