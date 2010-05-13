@@ -49,6 +49,13 @@ class RingPattern : public QObject
 		VibLedThread * vibThread;
         bool synchronized;
         QValueSpaceObject * valueSpace;	
+        int playingThreads;
+
+    public slots:
+        void childDied();
+
+    signals:
+        void finished();
 };  
 
 #endif

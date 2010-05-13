@@ -44,6 +44,8 @@ class VibLedThread : public QThread
 	public slots:
 		void step();
 	
+    signals:
+        void finished();
  };
 
 #endif

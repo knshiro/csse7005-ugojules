@@ -56,6 +56,7 @@ void VibLedThread::step(){
 	else {
 		out<<"0";
 		brightness.close();
+        emit finished();
 		qDebug()<<name<<": stopped at step"<<index;
 	}
 }
