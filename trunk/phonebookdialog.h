@@ -54,6 +54,7 @@ class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
 		void on_selectButton_clicked();
 		void on_deleteButton_clicked();
 		void facingUp(bool up);
+        void outputFinished();
 
     private:
         int selection;
@@ -64,6 +65,7 @@ class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
 		AccelThread * accelThread;
 		int orientationState;
 		QTime timer;
+        int outputRunning;
 
 };
 

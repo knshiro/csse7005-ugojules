@@ -38,6 +38,8 @@ PhoneBookDialog::PhoneBookDialog(QWidget *parent, Qt::WFlags f)
 	audioThread = new PlayAudioThread();
 	accelThread = new AccelThread();
 	QObject::connect(accelThread, SIGNAL(facingUp(bool)), this, SLOT(facingUp(bool)));
+    QObject::connect(audioThread, SIGNAL(endReached()), this, SLOT(outputFinished()));
+    QObject::connect(ringpattern, SIGNAL(finished()), this, SLOT(outputFinished()));
     qDebug()<<"instanciated phonebook ringpattern and playaudiothread";
 	myPhoneBook->loadPhoneBook();
 	qDebug()<<"phonebook loaded";
@@ -180,6 +182,12 @@ void PhoneBookDialog::deleteContact(int index)
 
 }
 
+void PhoneBookDialog::outputFinished(){
+    outputRunning--;
+    if (outputRunning==0)
+        accelThread->stop();
+}
+
 void PhoneBookDialog::stopCall(){
 	audioThread->stop();
     ringpattern->stopVibrate();
@@ -209,7 +217,8 @@ void PhoneBookDialog::callContact(int index){
 	if(accelThread->isFacingUp())
 		audioThread->play();
 	ringpattern->startVibrate();
-
+    
+    outputRunning=2;
 	orientationState=0;
 
 /*

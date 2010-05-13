@@ -32,6 +32,10 @@ RingPattern::RingPattern()
 	redThread=new VibLedThread("/sys/class/leds/gta02-aux:red","red led ");
 	vibThread=new VibLedThread("/sys/class/leds/neo1973:vibrator","vib     ");
     
+    QObject::connect(blueThread,SIGNAL(finished()),this,SLOT(childDied()));
+    QObject::connect(orangeThread,SIGNAL(finished()),this,SLOT(childDied()));
+    QObject::connect(redThread,SIGNAL(finished()),this,SLOT(childDied()));
+    QObject::connect(vibThread,SIGNAL(finished()),this,SLOT(childDied()));
 
     valueSpace = new QValueSpaceObject("/CSSE4003");
 
@@ -202,6 +206,8 @@ void RingPattern::playPattern(){
 	redThread->start();
 	vibThread->start();
 
+    playingThreads=4;
+
 	qDebug() << "  pattern started";
 }
 
@@ -237,6 +243,12 @@ void RingPattern::stopVibrate(){
 	redThread->stop();
 	vibThread->stop();
 	qDebug() << "<<<< stopVibrate";
+}
+
+void RingPattern::childDied(){
+    playingThreads--;
+    if (playingThreads==0)
+        emit finished();
 }
 
 RingPattern::~RingPattern()
