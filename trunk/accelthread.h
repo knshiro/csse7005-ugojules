@@ -18,7 +18,7 @@
 /**
 *   @author Ugo Bataillard
 *   @version 1.0
-*   This class is used to play audio files and implements the playback with multithreading.
+*
 */
 class AccelThread : public QThread
 {
