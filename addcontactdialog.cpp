@@ -77,6 +77,9 @@ void AddContactDialog::on_savePushButton_clicked()
             emit editContact(editEntry);
         }
         else {
+		if(ringToneLabel->text() == "Default"){
+			ringToneLabel->setText("Default.aud");
+		}
 	        NeoPhoneBookEntry *newEntry = new NeoPhoneBookEntry(nameLineEdit->text(), numberLineEdit->text(), emailLineEdit->text(),pictureFilePath, ringToneLabel->text(), vibrationLabel->text(), ledLabel->text(), ringOptionComboBox->currentIndex(), ringOffset);
             emit addContact(newEntry);
         }
