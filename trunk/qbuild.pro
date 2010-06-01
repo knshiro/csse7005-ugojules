@@ -2,12 +2,13 @@
 TEMPLATE=app
 
 # The binary name
-TARGET=assignment4
+TARGET=assignment5
 
 # This app uses Qtopia
 CONFIG+=qtopia
 
-QTOPIA*=audio
+# This is the bluetooth comm library
+QTOPIA*=comm audio
 
 # Build this app as a quicklauncher plugin
 # You need to be using the QTOPIA_ADD_APPLICATION/QTOPIA_MAIN macros or this will not work!
@@ -17,12 +18,15 @@ QTOPIA*=audio
 #CONFIG+=singleexec
 
 # These are the source files that get built to create the application
-FORMS  =viewcontactform.ui \
+FORMS  = neoconnection.ui \
+viewcontactform.ui \
 	addcontactform.ui \
         selectcallform.ui \
         phonebookform.ui \
 	audiodialogform.ui
-HEADERS=neophonebookentry.h \
+HEADERS=protocols.h \
+        neoconnection.h \
+neophonebookentry.h \
         neophonebook.h \
 	viewcontactdialog.h \
         addcontactdialog.h \
@@ -34,7 +38,8 @@ HEADERS=neophonebookentry.h \
         playaudiothread.h \
         custompushbutton.h \
 	ringpattern.h
-SOURCES=neophonebookentry.cpp \ 
+SOURCES=neoconnection.cpp \
+        neophonebookentry.cpp \ 
         neophonebook.cpp \
 	    viewcontactdialog.cpp \
         addcontactdialog.cpp \
@@ -52,3 +57,16 @@ SOURCES=neophonebookentry.cpp \
 target.hint=sxe
 target.domain=untrusted
 
+# Desktop application icon
+desktop.files=assignment5.desktop
+desktop.path=/apps/Applications
+desktop.hint=desktop
+
+INSTALLS+=desktop
+
+# Package creating details
+pkg.name=assignment5
+pkg.desc=Assignment 5 Client
+pkg.domain=trusted
+
+requires(enable_bluetooth)
