@@ -1,0 +1,10 @@
+[Translation]
+File=assignment5-nct
+Context=assignment5
+
+[Desktop Entry]
+Comment[]=Handset client for Assignment5
+Exec=assignment5
+Icon=bluetooth/bluetooth-online
+Type=Application
+Name[]=BT Assignment5
