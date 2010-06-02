@@ -40,10 +40,11 @@ class NeoPhoneBook : public QObject
         NeoPhoneBookEntry* getElementAt(int index);
 		void writePhoneBookIn(QByteArray &out);
         ~NeoPhoneBook();
+        QString fileName;
+
 
     private:
         QList<NeoPhoneBookEntry*> phoneList;
-        QString fileName;
 		int recFindIndex(QString const &name,int start, int end);
 
 };

@@ -38,6 +38,8 @@ AddContactDialog::~AddContactDialog()
 void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
 {
     QPixmap picture;
+	QDir documents = QDir::home();
+	documents.cd("Documents");
     editEntry = entryToEdit;
     // sets up the UI for edit-mode
     nameLineEdit->setText(entryToEdit->getContactName());
@@ -51,7 +53,7 @@ void AddContactDialog::setupEdit(NeoPhoneBookEntry *entryToEdit)
     setRingOffset(entryToEdit->getRingOffset());
     qDebug() << "Filename :" << entryToEdit->getPictureFilePath();
     if(entryToEdit->getPictureFilePath() != ""){
-      picture = QPixmap(entryToEdit->getPictureFilePath());
+      picture = QPixmap(documents.filePath(pictureFilePath));
       picture = picture.scaled(QSize(pictureLabel->width(),pictureLabel->height()),Qt::KeepAspectRatio,Qt::SmoothTransformation);
       pictureLabel->setPixmap(picture);
       removePushButton->setEnabled(true);
@@ -83,8 +85,13 @@ void AddContactDialog::on_savePushButton_clicked()
 	        NeoPhoneBookEntry *newEntry = new NeoPhoneBookEntry(nameLineEdit->text(), numberLineEdit->text(), emailLineEdit->text(),pictureFilePath, ringToneLabel->text(), vibrationLabel->text(), ledLabel->text(), ringOptionComboBox->currentIndex(), ringOffset);
             emit addContact(newEntry);
         }
-    }
-    close();
+	close();
+    } else {
+		QMessageBox::warning(this, "Save impossible",
+                   "You must enter at least a name and a telephone number",
+                   QMessageBox::Ok);
+	}
+    
 }
 
 
@@ -109,8 +116,9 @@ void AddContactDialog::on_browsePushButton_clicked()
     if( QtopiaApplication::execDialog( &dialog ) ) {
         // Accept
         QContent content = dialog.selectedDocument();
-        pictureFilePath = content.fileName ();
-	picture = QPixmap(pictureFilePath);
+		QFileInfo picFile(content.fileName());
+        pictureFilePath = picFile.fileName();
+		picture = QPixmap(content.fileName());
 	qDebug() << "Filename :" << pictureFilePath;
         picture = picture.scaled(QSize(pictureLabel->width(),pictureLabel->height()),Qt::KeepAspectRatio,Qt::SmoothTransformation);
         pictureLabel->setPixmap(picture);
