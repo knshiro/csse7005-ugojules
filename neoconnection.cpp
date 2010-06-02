@@ -25,7 +25,9 @@
 #include <QBluetoothAddress>
 #include <QBluetoothRfcommSocket>
 #include <QBluetoothRemoteDeviceDialog>
+#include <QBluetoothRemoteDeviceDialogFilter>
 
+#include <QDataStream>
 #include <QtopiaApplication>
 #include <QWaitWidget>
 #include <QAction>
@@ -64,12 +66,59 @@ NeoConnection::~NeoConnection()
  */
 void NeoConnection::connectSocket()
 {
+	QSet<QBluetooth::DeviceMajor> deviceMajors;
+    deviceMajors.insert(QBluetooth::Phone);
+    QBluetoothRemoteDeviceDialogFilter filter;
+    filter.setAcceptedDeviceMajors(deviceMajors);
+
+    QSet<QBluetooth::SDPProfile> profiles;
+    //profiles.insert(QBluetooth::SerialPortProfile);
+
     /* Create a Qt Bluetooth device select dialog to grab an address */
+	QBluetoothAddress selectedDevice = QBluetoothRemoteDeviceDialog::getRemoteDevice(0, profiles, NULL);
+
+	rfcommSocket = new QBluetoothRfcommSocket;
+	//QObject::connect(rfcommSocket, SIGNAL(disconnected()), this, SLOT(updateFSM("disconnect")));
+	QObject::connect(rfcommSocket, SIGNAL(readyRead ()), this, SLOT(readFromSocket()));
+
+
+	if ( rfcommSocket->connect(QBluetoothAddress::any, selectedDevice, channelEdit->value() ) ){
+		updateFSM("connect");
+		infoQLabel->setText("Connected");
+		rfcommSocket->waitForConnected();
+		QString message("YEEEEEEPIKAYEH\n");
+		qDebug() << "Nombre de bytes envoyes" << this->write(message.toAscii());
+	}
+	else {
+		infoQLabel->setText("Connection failure");
+	}
 }
 
+qint64 NeoConnection::write(const QByteArray & byteArray){
+	
+	if(neo_state == NEO_CONNECTED){
+		qDebug() << "Writing to socket" << byteArray;
+		return rfcommSocket->write(byteArray);
+	}
+	else {
+		return -1;
+	}
+
+}
+
+void NeoConnection::readFromSocket(){
+	qDebug() << "Received message from server";
+	
+	QByteArray byteArray;	
+	byteArray = rfcommSocket->readAll();
+	qDebug()<< byteArray;
+
+}
 
 void NeoConnection::on_serverButton_clicked()
 {
+	infoQLabel->setText("Try to connect");
+	connectSocket();
 }
 
 /*
@@ -82,9 +131,39 @@ void NeoConnection::updateFSM(const QString &command)
     switch(neo_state)
     {
         case NEO_INIT:
+			if(command.compare("connect")==0){
+				qDebug() << "Connected state";
+				neo_state = NEO_CONNECTED;
+			}
             break;
+		case NEO_CONNECTED:
+			if(command.compare("disconnect")==0){
+				neo_state = NEO_INIT;
+			}
         default:
             break;
     }
 }
+
+
+int NeoConnection::syncPhoneBook(NeoPhoneBook * phoneBook){
+	QByteArray buffer;
+	
+	QDataStream out(&buffer, QIODevice::WriteOnly);
+
+	out << SYNC;
+	out << "phonebook";
+	return 0;
+}
+	
+
+
+
+
+
+
+
+
+
+
 

@@ -21,9 +21,12 @@
 
 /* Neo State Machine */
 #define NEO_INIT      0
+#define NEO_CONNECTED 1
 
 /* Transport layer opcodes */
-#define HELLO_WORLD   0
+#define SYNC   0
+#define ACK    1
+#define CALL   2
 
 #endif
 

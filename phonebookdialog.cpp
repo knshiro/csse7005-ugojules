@@ -19,7 +19,7 @@
 #include "phonebookdialog.h"
 #include "viewcontactdialog.h"
 #include "ringpattern.h"
-
+#include <QSoftMenuBar>
 
 PhoneBookDialog::PhoneBookDialog(QWidget *parent, Qt::WFlags f)
     : QWidget(parent, f)
@@ -37,6 +37,10 @@ PhoneBookDialog::PhoneBookDialog(QWidget *parent, Qt::WFlags f)
 	ringpattern = new RingPattern();
 	audioThread = new PlayAudioThread();
 	accelThread = new AccelThread();
+	neoConnection = new NeoConnection();
+	QMenu *menu = QSoftMenuBar::menuFor(this);
+    menu->addAction(tr("Connect"), this, SLOT(connectBluetooth()));
+
 	QObject::connect(accelThread, SIGNAL(facingUp(bool)), this, SLOT(facingUp(bool)));
     QObject::connect(audioThread, SIGNAL(endReached()), this, SLOT(outputFinished()));
     QObject::connect(ringpattern, SIGNAL(finished()), this, SLOT(outputFinished()));
@@ -51,8 +55,6 @@ PhoneBookDialog::PhoneBookDialog(QWidget *parent, Qt::WFlags f)
 
     //Load patterns
     loadPatterns();
-
-
 
 }
 
@@ -355,3 +357,9 @@ void PhoneBookDialog::loadPatterns(){
     }
 
 }
+
+void PhoneBookDialog::connectBluetooth(){
+	qDebug()<<"connect";
+	neoConnection->showMaximized();
+}
+

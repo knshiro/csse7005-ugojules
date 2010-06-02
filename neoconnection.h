@@ -22,6 +22,7 @@
 #include <QTimer>
 #include <qtopia/qtopiaapplication.h>
 
+#include "neophonebook.h"
 #include "protocols.h"
 #include "ui_neoconnection.h"
 
@@ -43,11 +44,15 @@ class NeoConnection : public QWidget, public Ui_NeoConnection
         void connectSocket();
         void updateFSM(const QString &command);
         void on_serverButton_clicked();
+		int syncPhoneBook(NeoPhoneBook * phoneBook);
 
     private slots:
+		void readFromSocket();
 
     private:
         int neo_state;
+		QBluetoothRfcommSocket *rfcommSocket;
+		qint64 write(const QByteArray & byteArray);
 };
 
 #endif
