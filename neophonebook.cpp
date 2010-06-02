@@ -107,12 +107,13 @@ void NeoPhoneBook::savePhoneBook()
     
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
        return;
-	QDataStream out(&file);
+	QByteArray out;
     writePhoneBookIn(out);
-    qDebug()<<"<<<<Phonebook saved";
+    file.write(out);
+	qDebug()<<"<<<<Phonebook saved";
 }
 
-void NeoPhoneBook::writePhoneBookIn(QDataStream &out){
+void NeoPhoneBook::writePhoneBookIn(QByteArray &out){
 	QByteArray bytes;
 NeoPhoneBookEntry entry;
 	for(int i=0;i<phoneList.size();i++){
@@ -123,7 +124,7 @@ NeoPhoneBookEntry entry;
       line.append(QString::number(entry.getRingOffset()));
       line.append("\n");
       qDebug()<<"Saving entry" <<line;
-      out << line ;
+      out.append(line.toAscii()) ;
     }
 
 }

@@ -39,12 +39,17 @@ class NeoConnection : public QWidget, public Ui_NeoConnection
     public:
         NeoConnection( QWidget *parent = 0, Qt::WFlags f = 0 );
         ~NeoConnection();
+		bool isConnected();
+		
     
     public slots:
         void connectSocket();
         void updateFSM(const QString &command);
         void on_serverButton_clicked();
-		int syncPhoneBook(NeoPhoneBook * phoneBook);
+		qint64 write(const QByteArray & byteArray);
+
+	signals:
+		void connected();
 
     private slots:
 		void readFromSocket();
@@ -52,7 +57,6 @@ class NeoConnection : public QWidget, public Ui_NeoConnection
     private:
         int neo_state;
 		QBluetoothRfcommSocket *rfcommSocket;
-		qint64 write(const QByteArray & byteArray);
 };
 
 #endif
