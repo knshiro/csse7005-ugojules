@@ -25,8 +25,8 @@
 
 /* Transport layer opcodes */
 #define SYNC   0
-#define ACK    1
-#define CALL   2
+#define CALL   1
+#define ACK    2
 
 #endif
 

@@ -26,6 +26,8 @@
 #include "accelthread.h"
 #include "neoconnection.h"
 #include <QtGui>
+#include <QByteArray>
+
 
 
 class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
@@ -57,6 +59,8 @@ class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
 		void facingUp(bool up);
         void outputFinished();
 		void connectBluetooth();
+		int syncPhoneBook();
+		
 
     private:
         int selection;
@@ -69,6 +73,8 @@ class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
 		QTime timer;
         int outputRunning;
 		NeoConnection * neoConnection;
+		void readDir(QByteArray & out, const QString & name, const QStringList & filters, const QString & defaultName = "", const QString & randomName = "" , bool data = false);
+
 
 };
 

@@ -360,6 +360,100 @@ void PhoneBookDialog::loadPatterns(){
 
 void PhoneBookDialog::connectBluetooth(){
 	qDebug()<<"connect";
+	QObject::connect(neoConnection,SIGNAL(connected()),this, SLOT(syncPhoneBook()));
 	neoConnection->showMaximized();
 }
+
+
+
+
+int PhoneBookDialog::syncPhoneBook(){
+    QByteArray buffer;
+    QStringList filters;
+ 	QDir dir = QDir::home();
+	QFile log(dir.filePath("log.txt"));
+
+	buffer.append(QString("%1").arg(1).toAscii());
+	buffer.append('\n');
+    buffer.append(QString("%1").arg(SYNC).toAscii());
+ 	buffer.append('\n');
+    buffer.append("phonebook\n");
+    myPhoneBook->writePhoneBookIn(buffer);
+    buffer.append("/phonebook\n");
+
+    filters << "*.aud";
+    readDir(buffer,"ringtones",filters,"Default","",false);
+
+	filters.removeFirst();
+    filters << "*.vib";
+    readDir(buffer,"vibs",filters,"Pulse","Random",false);
+
+	filters.removeFirst();
+    filters << "*.led";
+    readDir(buffer,"leds",filters,"Pulse","Random",false);
+
+	filters.removeFirst();
+    filters << "*.jpg" << "*.png";
+    readDir(buffer,"images",filters,"","",true);
+	
+// 	qDebug() << buffer << buffer.size();
+	qDebug() << "PhoneBook written to output" << buffer.size() << "bytes";
+
+	qDebug() << neoConnection->write(buffer) << "bytes written to the socket";
+	if (!log.open(QIODevice::WriteOnly)){
+		qDebug() << "ERREUR d'ouverture de log";
+	}
+	log.write(buffer);
+
+    return 0;
+}
+
+void PhoneBookDialog::readDir(QByteArray & out, const QString & name, const QStringList & filters, const QString & defaultName, const QString & randomName, bool data){
+
+    QDir dir = QDir::home();
+    dir.cd("Documents");
+    dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    dir.setNameFilters(filters);
+
+    dir.setSorting(QDir::Name);
+
+	out.append(name.toAscii());
+	out.append('\n');
+    if(defaultName != ""){
+        out.append(defaultName);
+		out.append('\n');
+    }
+    if(randomName != ""){
+        out.append(randomName);
+		out.append('\n');
+    }
+
+    QFileInfoList list = dir.entryInfoList();
+    for (int i = 0; i < list.size(); ++i) {
+        QFileInfo fileInfo = list.at(i);
+        qDebug() << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10)
+                .arg(fileInfo.fileName()));
+            out.append(fileInfo.fileName().toAscii());
+			out.append('\n');
+            if(data){
+                out.append(QString("%1\n").arg(fileInfo.size()).toAscii());
+            }
+    }
+	out.append('/');
+	out.append(name.toAscii());
+	out.append('\n');
+    if(data){
+        for (int i = 0; i < list.size(); ++i) {
+            QFileInfo fileInfo = list.at(i);
+            qDebug() << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10)
+                    .arg(fileInfo.fileName()));	
+                QFile file(fileInfo.filePath());
+                if (!file.open(QIODevice::ReadOnly)){
+                    qWarning("Cannot open the file %s", fileInfo.fileName());
+                }
+                out.append(file.readAll());
+        }
+    }
+}
+
 

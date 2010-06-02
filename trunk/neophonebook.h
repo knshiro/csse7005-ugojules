@@ -18,7 +18,7 @@
 #ifndef NEOPHONEBOOK_H
 #define NEOPHONEBOOK_H
 #include <QtGui>
-#include <QDataStream>
+#include <QByteArray>
 
 #include <qtopia/qtopiaapplication.h>
 #include "neophonebookentry.h"
@@ -38,13 +38,14 @@ class NeoPhoneBook : public QObject
         void savePhoneBook();
         void clearPhoneBook();
         NeoPhoneBookEntry* getElementAt(int index);
-		void writePhoneBookIn(QDataStream &out);
+		void writePhoneBookIn(QByteArray &out);
         ~NeoPhoneBook();
 
     private:
         QList<NeoPhoneBookEntry*> phoneList;
         QString fileName;
-	int recFindIndex(QString const &name,int start, int end);
+		int recFindIndex(QString const &name,int start, int end);
+
 };
 
 #endif
