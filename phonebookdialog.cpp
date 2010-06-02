@@ -420,7 +420,7 @@ int PhoneBookDialog::syncPhoneBook(bool data){
 		readDir(buffer,"leds",filters,"Pulse","Random",false);
 	
 		filters.removeFirst();
-		filters << "*.jpg" << "*.png";
+		filters << "*.jpg" << "*.png" << "*.jpeg" << "*.gif" << "*.bmp";
 		readDir(buffer,"images",filters,"","",data);
 		
 	// 	qDebug() << buffer << buffer.size();
@@ -442,7 +442,6 @@ void PhoneBookDialog::readDir(QByteArray & out, const QString & name, const QStr
     QDir dir = QDir::home();
     dir.cd("Documents");
     dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
-    dir.setNameFilters(filters);
 
     dir.setSorting(QDir::Name);
 
@@ -457,7 +456,7 @@ void PhoneBookDialog::readDir(QByteArray & out, const QString & name, const QStr
 		out.append('\n');
     }
 
-    QFileInfoList list = dir.entryInfoList();
+    QFileInfoList list = dir.entryInfoList(filters);
     for (int i = 0; i < list.size(); ++i) {
         QFileInfo fileInfo = list.at(i);
         qDebug() << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10)

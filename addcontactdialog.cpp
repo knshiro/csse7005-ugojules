@@ -79,9 +79,6 @@ void AddContactDialog::on_savePushButton_clicked()
             emit editContact(editEntry);
         }
         else {
-		if(ringToneLabel->text() == "Default"){
-			ringToneLabel->setText("Default.aud");
-		}
 	        NeoPhoneBookEntry *newEntry = new NeoPhoneBookEntry(nameLineEdit->text(), numberLineEdit->text(), emailLineEdit->text(),pictureFilePath, ringToneLabel->text(), vibrationLabel->text(), ledLabel->text(), ringOptionComboBox->currentIndex(), ringOffset);
             emit addContact(newEntry);
         }
@@ -172,9 +169,6 @@ void AddContactDialog::setFile(QString filename) {
 	switch(browseState){
 		case RINGTONE:
 			qDebug() << "Ringtone :" << filename << "selected";
-            if(filename == "Default"){
-                filename = "Default.aud";
-            }
 			ad = new AudioDialog(filename);
                         ad->showMaximized();
             ad->setAttribute(Qt::WA_DeleteOnClose);

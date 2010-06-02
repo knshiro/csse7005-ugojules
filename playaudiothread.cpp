@@ -30,6 +30,9 @@ bool PlayAudioThread::loadFile(QString filename){
         file = new QFile(filename);
     }
     else{
+		if(filename.compare("Default")==0){
+			filename = QString("Default.aud");
+		}
         QDir dir = QDir::home();
         dir.cd("Documents");
         qDebug() << dir.filePath(filename);

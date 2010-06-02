@@ -19,7 +19,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget" >
      <property name="currentIndex" >
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="Contact_Tab" >
       <attribute name="title" >
@@ -394,7 +394,7 @@
       <attribute name="title" >
        <string>Ring</string>
       </attribute>
-      <widget class="QWidget" name="" >
+      <widget class="QWidget" name="layoutWidget" >
        <property name="geometry" >
         <rect>
          <x>0</x>
