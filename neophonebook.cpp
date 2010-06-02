@@ -78,9 +78,11 @@ void NeoPhoneBook::loadPhoneBook()
 {
     // load the phonebook by reading the "phonebook" file and populating
     // phoneList
-    QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+	QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+	   qWarning("Couldn't load the phonebook");
        return;
+	}
     while (!file.atEnd()) {
         QString line = QString(file.readLine());
         line = line.replace("\n","").replace("\r","");

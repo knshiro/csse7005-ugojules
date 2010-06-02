@@ -38,12 +38,19 @@ PhoneBookDialog::PhoneBookDialog(QWidget *parent, Qt::WFlags f)
 	audioThread = new PlayAudioThread();
 	accelThread = new AccelThread();
 	neoConnection = new NeoConnection();
+	QObject::connect(neoConnection,SIGNAL(connected()),this, SLOT(connected()));
+	QObject::connect(neoConnection,SIGNAL(disconnected()),this, SLOT(disconnected()));
+	QObject::connect(neoConnection,SIGNAL(receivedPacket(QByteArray)),this, SLOT(treatPacket(QByteArray)));
+	treatPacketState = WAITING;
 	QMenu *menu = QSoftMenuBar::menuFor(this);
-    menu->addAction(tr("Connect"), this, SLOT(connectBluetooth()));
+	connectAct = new QAction( tr("Connect"), this);
+	QObject::connect(connectAct, SIGNAL(triggered()),this, SLOT(connectBluetooth()));
+    menu->addAction(connectAct);
 
 	QObject::connect(accelThread, SIGNAL(facingUp(bool)), this, SLOT(facingUp(bool)));
     QObject::connect(audioThread, SIGNAL(endReached()), this, SLOT(outputFinished()));
     QObject::connect(ringpattern, SIGNAL(finished()), this, SLOT(outputFinished()));
+	
     qDebug()<<"instanciated phonebook ringpattern and playaudiothread";
 	myPhoneBook->loadPhoneBook();
 	qDebug()<<"phonebook loaded";
@@ -162,6 +169,7 @@ void PhoneBookDialog::addContact(NeoPhoneBookEntry *newEntry)
 	myPhoneBook->addEntry(newEntry);
 	selection = myPhoneBook->findIndex(newEntry->getContactName());
 	updateScreen(REFRESH);
+	syncPhoneBook();
 
 }
 
@@ -173,6 +181,8 @@ void PhoneBookDialog::replaceContact(NeoPhoneBookEntry *newEntry)
 	myPhoneBook->savePhoneBook();
 	selection= myPhoneBook->findIndex(newEntry->getContactName());
 	updateScreen(REFRESH);
+	syncPhoneBook();
+
 }
 
 void PhoneBookDialog::deleteContact(int index)
@@ -181,6 +191,7 @@ void PhoneBookDialog::deleteContact(int index)
 	myPhoneBook->deleteEntry(index);
 	if(index==myPhoneBook->getNumEntries()) updateScreen(DELETE_LAST);
 	else updateScreen(REFRESH);
+	syncPhoneBook();
 
 }
 
@@ -197,6 +208,7 @@ void PhoneBookDialog::stopCall(){
 }
 
 void PhoneBookDialog::callContact(int index){
+	qDebug() << "Call contact" << index;
 	accelThread->start();
 
     NeoPhoneBookEntry* contact = myPhoneBook->getElementAt(index);
@@ -360,56 +372,73 @@ void PhoneBookDialog::loadPatterns(){
 
 void PhoneBookDialog::connectBluetooth(){
 	qDebug()<<"connect";
-	QObject::connect(neoConnection,SIGNAL(connected()),this, SLOT(syncPhoneBook()));
 	neoConnection->showMaximized();
 }
 
+void PhoneBookDialog::disconnectBluetooth(){
+	qDebug()<<"disconnect";
+	neoConnection->disconnectBluetooth();
+}
+
+void PhoneBookDialog::connected(){
+	connectAct->setText("Disconnect");
+	connectAct->disconnect(SIGNAL(triggered()));
+	QObject::connect(connectAct,SIGNAL(triggered()),this,SLOT(disconnectBluetooth()));
+	syncPhoneBook(true);
+}
+
+void PhoneBookDialog::disconnected(){
+	connectAct->setText("Connect");
+	connectAct->disconnect(SIGNAL(triggered()));
+	QObject::connect(connectAct,SIGNAL(triggered()),this,SLOT(connectBluetooth()));
+}
 
 
-
-int PhoneBookDialog::syncPhoneBook(){
+int PhoneBookDialog::syncPhoneBook(bool data){
     QByteArray buffer;
     QStringList filters;
  	QDir dir = QDir::home();
 	QFile log(dir.filePath("log.txt"));
-
-	buffer.append(QString("%1").arg(1).toAscii());
-	buffer.append('\n');
-    buffer.append(QString("%1").arg(SYNC).toAscii());
- 	buffer.append('\n');
-    buffer.append("phonebook\n");
-    myPhoneBook->writePhoneBookIn(buffer);
-    buffer.append("/phonebook\n");
-
-    filters << "*.aud";
-    readDir(buffer,"ringtones",filters,"Default","",false);
-
-	filters.removeFirst();
-    filters << "*.vib";
-    readDir(buffer,"vibs",filters,"Pulse","Random",false);
-
-	filters.removeFirst();
-    filters << "*.led";
-    readDir(buffer,"leds",filters,"Pulse","Random",false);
-
-	filters.removeFirst();
-    filters << "*.jpg" << "*.png";
-    readDir(buffer,"images",filters,"","",true);
+	if(neoConnection->isConnected()){
+		buffer.append(QString("%1").arg(1).toAscii());
+		buffer.append('\n');
+		buffer.append(QString("%1").arg(SYNC).toAscii());
+		buffer.append('\n');
+		buffer.append("phonebook\n");
+		myPhoneBook->writePhoneBookIn(buffer);
+		buffer.append("/phonebook\n");
 	
-// 	qDebug() << buffer << buffer.size();
-	qDebug() << "PhoneBook written to output" << buffer.size() << "bytes";
-
-	qDebug() << neoConnection->write(buffer) << "bytes written to the socket";
-	if (!log.open(QIODevice::WriteOnly)){
-		qDebug() << "ERREUR d'ouverture de log";
+		filters << "*.aud";
+		readDir(buffer,"ringtones",filters,"Default","",false);
+	
+		filters.removeFirst();
+		filters << "*.vib";
+		readDir(buffer,"vibs",filters,"Pulse","Random",false);
+	
+		filters.removeFirst();
+		filters << "*.led";
+		readDir(buffer,"leds",filters,"Pulse","Random",false);
+	
+		filters.removeFirst();
+		filters << "*.jpg" << "*.png";
+		readDir(buffer,"images",filters,"","",data);
+		
+	// 	qDebug() << buffer << buffer.size();
+		qDebug() << "PhoneBook written to output" << buffer.size() << "bytes";
+	
+		qDebug() << neoConnection->write(buffer) << "bytes written to the socket";
+		if (!log.open(QIODevice::WriteOnly)){
+			qDebug() << "ERREUR d'ouverture de log";
+		}
+		log.write(buffer);
+		log.close();	
 	}
-	log.write(buffer);
-
     return 0;
 }
 
 void PhoneBookDialog::readDir(QByteArray & out, const QString & name, const QStringList & filters, const QString & defaultName, const QString & randomName, bool data){
-
+	qDebug() << "Reading dir with filters" << filters;
+	
     QDir dir = QDir::home();
     dir.cd("Documents");
     dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
@@ -449,11 +478,75 @@ void PhoneBookDialog::readDir(QByteArray & out, const QString & name, const QStr
                     .arg(fileInfo.fileName()));	
                 QFile file(fileInfo.filePath());
                 if (!file.open(QIODevice::ReadOnly)){
-                    qWarning("Cannot open the file %s", fileInfo.fileName());
+                    qWarning("Cannot open the file");
                 }
                 out.append(file.readAll());
         }
     }
 }
 
+void PhoneBookDialog::treatPacket(QByteArray packet){
+	
+	QString buffer;
+	QTextStream in(packet);
+	if(treatPacketState == WAITING){
+		in.readLine();				//Transaction id do nothing for now
+		buffer = in.readLine();
+		qDebug() << "Received value" << buffer.toInt();
+		switch(buffer.toInt()){
+			case SYNC:
+				qDebug() << "Receive sync message";
+				treatSync(in);
+				break;
+			case ACK:
+				qDebug() << "Receive ack message";
+				break;
+			case CALL:
+				qDebug() << "Receive call message";
+				treatCall(in);
+				break;
+			default:
+			;
+		}
+	}
+	else {
+		switch(treatPacketState){
+			case SYNCING:
+				treatSync(in);
+				break;
+			default:
+			;
+		}
+	}
+}
 
+int PhoneBookDialog::treatSync(QTextStream &in){
+	qDebug() << "Treating sync message";
+	QString line;
+	QFile phoneBookFile(myPhoneBook->fileName);
+	if( !phoneBookFile.open(QIODevice::WriteOnly) ){
+		qWarning("Could not write the phonebook");
+		return -1;
+	}
+	line = in.readLine();
+	if(line.compare("phonebook")==0){
+		while( !in.atEnd() && (line = in.readLine()).compare("/phonebook") != 0){
+			phoneBookFile.write(line.toAscii());
+			phoneBookFile.write("\n");
+		}
+		phoneBookFile.close();
+		myPhoneBook->clearPhoneBook();
+		myPhoneBook->loadPhoneBook();
+    	updateScreen(REFRESH);
+		
+	}
+	return 0;
+}
+
+int PhoneBookDialog::treatCall(QTextStream &in){
+	qDebug() << "Treating call message";
+	QString line;
+	line = in.readLine();
+	callContact(line.toInt());
+	return 0;
+}

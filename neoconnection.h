@@ -25,6 +25,7 @@
 #include "neophonebook.h"
 #include "protocols.h"
 #include "ui_neoconnection.h"
+#include <QDataStream>
 
 class QWaitWidget;
 class QAction;
@@ -47,9 +48,14 @@ class NeoConnection : public QWidget, public Ui_NeoConnection
         void updateFSM(const QString &command);
         void on_serverButton_clicked();
 		qint64 write(const QByteArray & byteArray);
+		void disconnectBluetooth();
+
+
 
 	signals:
 		void connected();
+		void disconnected();
+		void receivedPacket(QByteArray array);
 
     private slots:
 		void readFromSocket();

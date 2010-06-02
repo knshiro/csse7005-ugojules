@@ -29,6 +29,10 @@
 #include <QByteArray>
 
 
+#define WAITING	0
+#define SYNCING 1
+
+
 
 class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
 {
@@ -59,7 +63,11 @@ class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
 		void facingUp(bool up);
         void outputFinished();
 		void connectBluetooth();
-		int syncPhoneBook();
+		void disconnectBluetooth();
+		int syncPhoneBook(bool data = false);
+		void treatPacket(QByteArray packet);
+		void connected();
+		void disconnected();
 		
 
     private:
@@ -74,7 +82,10 @@ class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
         int outputRunning;
 		NeoConnection * neoConnection;
 		void readDir(QByteArray & out, const QString & name, const QStringList & filters, const QString & defaultName = "", const QString & randomName = "" , bool data = false);
-
+		int treatPacketState;
+		int treatSync(QTextStream &in);
+		int treatCall(QTextStream &in);
+		QAction *connectAct;
 
 };
 

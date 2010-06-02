@@ -24,6 +24,8 @@ ViewContactDialog::ViewContactDialog(PhoneBookDialog *phoneBookDialog, int index
     : QWidget(parent, f)
 {
 	qDebug() << ">>>> View Contact Dialog :";
+	QDir documents = QDir::home();
+	documents.cd("Documents");
 	this->phoneBookDialog=phoneBookDialog;
 	this->indexEntry=indexEntry;
 	setupUi(this);
@@ -31,7 +33,7 @@ ViewContactDialog::ViewContactDialog(PhoneBookDialog *phoneBookDialog, int index
 	nameLabel->setText(entry->getContactName());
 	numberLabel->setText(entry->getPhoneNumber());
 	QPixmap pic ;
-	pic.load(entry->getPictureFilePath());
+	pic.load(documents.filePath(entry->getPictureFilePath()));
 	qDebug() << "Picture size :" << pic.size();
 	qDebug() << "Label width :" << pictureLabel->width();
 	pic = pic.scaled(QSize(pictureLabel->width(),pictureLabel->height()),Qt::KeepAspectRatio,Qt::SmoothTransformation);

@@ -78,21 +78,30 @@ void NeoConnection::connectSocket()
     QBluetoothAddress selectedDevice = QBluetoothRemoteDeviceDialog::getRemoteDevice(0, profiles, NULL);
 
     rfcommSocket = new QBluetoothRfcommSocket;
-    //QObject::connect(rfcommSocket, SIGNAL(disconnected()), this, SLOT(updateFSM("disconnect")));
-    QObject::connect(rfcommSocket, SIGNAL(readyRead ()), this, SLOT(readFromSocket()));
+    QObject::connect(rfcommSocket, SIGNAL(disconnected()), this, SLOT(disconnectBluetooth()));
+    QObject::connect(rfcommSocket, SIGNAL(readyRead()), this, SLOT(readFromSocket()));
 
 
     if ( rfcommSocket->connect(QBluetoothAddress::any, selectedDevice, channelEdit->value() ) ){
         
-        rfcommSocket->waitForConnected();
+        if(rfcommSocket->waitForConnected()){
 		updateFSM("connect");
         infoQLabel->setText("Connected");
-        //QString message("YEEEEEEPIKAYEH\n");
+        }
+		else {
+		infoQLabel->setText("Connection failed");
+		}
+		//QString message("YEEEEEEPIKAYEH\n");
         //qDebug() << "Nombre de bytes envoyes" << this->write(message.toAscii());
     }
     else {
         infoQLabel->setText("Connection failure");
     }
+}
+
+void NeoConnection::disconnectBluetooth(){
+	rfcommSocket->close();
+	updateFSM("disconnect");	
 }
 
 qint64 NeoConnection::write(const QByteArray & byteArray){
@@ -113,6 +122,7 @@ void NeoConnection::readFromSocket(){
     QByteArray byteArray;	
     byteArray = rfcommSocket->readAll();
     qDebug()<< byteArray;
+	emit receivedPacket(byteArray);
 
 }
 
@@ -145,6 +155,7 @@ void NeoConnection::updateFSM(const QString &command)
         case NEO_CONNECTED:
             if(command.compare("disconnect")==0){
                 neo_state = NEO_INIT;
+				emit disconnected();
             }
         default:
             break;
