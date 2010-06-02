@@ -18,6 +18,8 @@
 #ifndef NEOPHONEBOOK_H
 #define NEOPHONEBOOK_H
 #include <QtGui>
+#include <QDataStream>
+
 #include <qtopia/qtopiaapplication.h>
 #include "neophonebookentry.h"
 
@@ -36,6 +38,7 @@ class NeoPhoneBook : public QObject
         void savePhoneBook();
         void clearPhoneBook();
         NeoPhoneBookEntry* getElementAt(int index);
+		void writePhoneBookIn(QDataStream &out);
         ~NeoPhoneBook();
 
     private:

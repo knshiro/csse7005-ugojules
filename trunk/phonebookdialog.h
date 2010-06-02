@@ -24,6 +24,7 @@
 #include "ringpattern.h"
 #include "playaudiothread.h"
 #include "accelthread.h"
+#include "neoconnection.h"
 #include <QtGui>
 
 
@@ -55,6 +56,7 @@ class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
 		void on_deleteButton_clicked();
 		void facingUp(bool up);
         void outputFinished();
+		void connectBluetooth();
 
     private:
         int selection;
@@ -66,6 +68,7 @@ class PhoneBookDialog : public QWidget, public Ui_PhoneBookForm
 		int orientationState;
 		QTime timer;
         int outputRunning;
+		NeoConnection * neoConnection;
 
 };
 
