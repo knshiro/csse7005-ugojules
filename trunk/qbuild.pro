@@ -62,11 +62,19 @@ desktop.files=assignment5.desktop
 desktop.path=/apps/Applications
 desktop.hint=desktop
 
+# Install some pictures.
+pics.files=icons/*.png
+pics.path=/pics/assignment5
+pics.hint=pics
+
+INSTALLS+=pics
+
 INSTALLS+=desktop
 
 # Package creating details
 pkg.name=assignment5
-pkg.desc=Assignment 5 Client
+pkg.desc=Assignment 5 Client ugojules
 pkg.domain=trusted
+pkg.version=1.0.0-1
 
 requires(enable_bluetooth)
