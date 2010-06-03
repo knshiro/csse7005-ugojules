@@ -30,7 +30,13 @@ AudioDialog::AudioDialog(QString filename, QWidget *parent, Qt::WFlags f)
     labelFileName->setText(filename);
     totalTime->setText(duration);
     updatePosition(0,true);
+    playButton->setIcon(QIcon(":image/play.png"));
 
+    rewindButton->setIcon(QIcon(":image/backward.png"));
+    stopButton->setIcon(QIcon(":image/stop.png"));
+    forwardButton->setIcon(QIcon(":image/forward.png"));
+
+    
     slider->setMaximum(audioLength);
     connect(player,SIGNAL(currentSec(int)),this,SLOT(updatePosition(int)));
     connect(player,SIGNAL(endReached()),this,SLOT(endReached()));
@@ -53,10 +59,10 @@ void AudioDialog::on_playButton_clicked(){
 
 void AudioDialog::updatePlayButton(){
     if(playing){
-        playButton->setIcon(QIcon("icons/pause.png"));
+        playButton->setIcon(QIcon(":image/pause.png"));
     }
     else {
-        playButton->setIcon(QIcon("icons/play.png"));
+        playButton->setIcon(QIcon(":image/play.png"));
     }
 }
 
